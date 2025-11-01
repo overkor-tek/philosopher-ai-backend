@@ -1,0 +1,36 @@
+# Knowledge Base Git Ignore
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+
+# Temp files
+*.tmp
+*.temp
+*.log
+
+# Large binaries (if any)
+*.exe
+*.dll
+
+# Secrets (if we add them later)
+.env
+secrets.json
+api_keys.json
+
+# Editor
+.vscode/
+.idea/
+*.sublime-*

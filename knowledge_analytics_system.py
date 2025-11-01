@@ -294,8 +294,8 @@ class KnowledgeAnalytics:
         print("   - Complex filters (<50ms)")
 
         print("\nDATA FLOW:")
-        print("   Markdown → Parser → Structured Data → Categorizer →")
-        print("   → Indexer → JSON Storage → Query Engine → Results")
+        print("   Markdown -> Parser -> Structured Data -> Categorizer ->")
+        print("   -> Indexer -> JSON Storage -> Query Engine -> Results")
 
     def monitor_health(self):
         """Monitor system health"""
