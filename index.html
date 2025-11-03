@@ -920,5 +920,24 @@
 <!-- Community Widget -->
 <script src="./community-widget.js"></script>
 <script src="/VISITOR_TRACKING_SNIPPET.js"></script>
+
+<!-- API Client Integration (Auto-injected) -->
+<script src="/ASSETS/js/api-client.js"></script>
+<script>
+    // Initialize API client
+    const api = new APIClient();
+
+    // Check if user is authenticated
+    if (api.auth.isAuthenticated()) {
+        console.log('[API] User authenticated:', api.auth.getCurrentUser());
+    } else {
+        console.log('[API] No authentication token found');
+    }
+
+    // Global error handler
+    window.addEventListener('unhandledrejection', (event) => {
+        console.error('[API] Unhandled promise rejection:', event.reason);
+    });
+</script>
 </body>
 </html>
