@@ -19,6 +19,7 @@ const Stripe = require('stripe');
 const { v4: uuidv4 } = require('uuid');
 const validator = require('validator');
 const { detectManipulationPatterns } = require('./manipulationDetector');
+const { initializeDatabase } = require('./init-database');
 
 // ================================================
 // CONFIGURATION
@@ -935,28 +936,32 @@ app.use((err, req, res, next) => {
 // SERVER STARTUP
 // ================================================
 
-// Test database connection (non-blocking for hybrid fallback)
-pool.query('SELECT NOW()', (err, res) => {
-    if (err) {
-        console.error('⚠️  Database connection failed - running in hybrid fallback mode');
-        console.error('   Frontend will use localStorage until database connects');
-        console.error('   Error:', err.message);
-    } else {
-        console.log('✅ Database connected successfully');
-    }
-});
+// Initialize database and start server
+async function startServer() {
+    try {
+        // Initialize database schema
+        await initializeDatabase(pool);
 
-// Start server
-app.listen(PORT, () => {
-    console.log('================================================');
-    console.log('🌀 PHILOSOPHER AI BACKEND - READY');
-    console.log('================================================');
-    console.log(`Server running on port ${PORT}`);
-    console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`API URL: ${process.env.API_URL || `http://localhost:${PORT}`}`);
-    console.log(`Version: ${process.env.PLATFORM_VERSION || '1.0.0'}`);
-    console.log('================================================');
-});
+        // Start server
+        app.listen(PORT, () => {
+            console.log('================================================');
+            console.log('🌀 PHILOSOPHER AI BACKEND - READY');
+            console.log('================================================');
+            console.log(`Server running on port ${PORT}`);
+            console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+            console.log(`API URL: ${process.env.API_URL || `http://localhost:${PORT}`}`);
+            console.log(`Version: ${process.env.PLATFORM_VERSION || '1.0.0'}`);
+            console.log('================================================');
+        });
+    } catch (error) {
+        console.error('❌ Server startup failed:', error.message);
+        console.error('   Retrying in 5 seconds...');
+        setTimeout(startServer, 5000);
+    }
+}
+
+// Start the server
+startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', () => {
