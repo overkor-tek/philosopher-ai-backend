@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Philosopher AI Backend</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 36px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #666;
+            font-size: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .stat-card p {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+
+        .sidebar-group {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-group h3 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .sidebar-link {
+            display: block;
+            padding: 8px 10px;
+            color: #666;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 13px;
+            margin-bottom: 5px;
+            transition: all 0.2s;
+        }
+
+        .sidebar-link:hover {
+            background: #f0f0f0;
+            color: #667eea;
+        }
+
+        .content {
+            margin-left: 270px;
+        }
+
+        .endpoint {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .endpoint-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .method {
+            padding: 8px 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 14px;
+            margin-right: 15px;
+        }
+
+        .method.GET { background: #61affe; color: white; }
+        .method.POST { background: #49cc90; color: white; }
+        .method.PUT { background: #fca130; color: white; }
+        .method.PATCH { background: #50e3c2; color: white; }
+        .method.DELETE { background: #f93e3e; color: white; }
+
+        .endpoint-path {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            font-family: 'Courier New', monospace;
+        }
+
+        .badges {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge.auth {
+            background: #ffe0b2;
+            color: #e65100;
+        }
+
+        .badge.rate {
+            background: #f3e5f5;
+            color: #4a148c;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            font-size: 16px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .param-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-size: 13px;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .param-table td {
+            padding: 12px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 13px;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .response-status {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-right: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>📚 API Reference</h2>
+        <div class="sidebar-group">
+<h3>Health & Status</h3>
+<a href="#GET__health" class="sidebar-link">GET /health</a>
+</div>
+<div class="sidebar-group">
+<h3>Authentication</h3>
+<a href="#POST__auth_register" class="sidebar-link">POST /auth/register</a>
+<a href="#POST__auth_login" class="sidebar-link">POST /auth/login</a>
+<a href="#POST__auth_logout" class="sidebar-link">POST /auth/logout</a>
+<a href="#GET__auth_verify" class="sidebar-link">GET /auth/verify</a>
+<a href="#GET__auth_me" class="sidebar-link">GET /auth/me</a>
+</div>
+<div class="sidebar-group">
+<h3>Philosopher AI</h3>
+<a href="#POST__questions_ask" class="sidebar-link">POST /questions/ask</a>
+<a href="#GET__questions_history" class="sidebar-link">GET /questions/history</a>
+<a href="#GET__usage_stats" class="sidebar-link">GET /usage/stats</a>
+</div>
+<div class="sidebar-group">
+<h3>Payment & Subscriptions</h3>
+<a href="#POST__stripe_create-checkout" class="sidebar-link">POST /stripe/create-checkout</a>
+<a href="#POST__subscriptions_create-checkout" class="sidebar-link">POST /subscriptions/create-checkout</a>
+<a href="#POST__stripe_webhook" class="sidebar-link">POST /stripe/webhook</a>
+<a href="#GET__subscriptions_current" class="sidebar-link">GET /subscriptions/current</a>
+</div>
+<div class="sidebar-group">
+<h3>Knowledge Base</h3>
+<a href="#POST__knowledge" class="sidebar-link">POST /knowledge</a>
+<a href="#GET__knowledge_search" class="sidebar-link">GET /knowledge/search</a>
+<a href="#GET__knowledge_category_category" class="sidebar-link">GET /knowledge/category/:category</a>
+<a href="#GET__knowledge_recent" class="sidebar-link">GET /knowledge/recent</a>
+<a href="#GET__metrics" class="sidebar-link">GET /metrics</a>
+</div>
+
+    </div>
+
+    <div class="content">
+        <div class="container">
+            <div class="header">
+                <h1>🚀 Philosopher AI Backend</h1>
+                <p>Complete API Documentation</p>
+                <p style="font-size: 14px; color: #999; margin-top: 10px;">
+                    Generated 2025-11-04 06:58:12
+                </p>
+            </div>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <h3>18</h3>
+                    <p>Total Endpoints</p>
+                </div>
+                <div class="stat-card">
+                    <h3>5</h3>
+                    <p>API Groups</p>
+                </div>
+                <div class="stat-card">
+                    <h3>9</h3>
+                    <p>Protected Routes</p>
+                </div>
+                <div class="stat-card">
+                    <h3>v1</h3>
+                    <p>API Version</p>
+                </div>
+            </div>
+
+            <h2 style="color: #667eea; margin: 40px 0 20px 0;">Health & Status</h2>
+<div class="endpoint" id="GET__health">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/health</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Week 3: API version indicator</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">409</span>
+<pre class="code-block">{
+        status: 'healthy',
+        version: process.env.PLATFORM_VERSION || '1.0.0',
+        buildNumber: process.env.PLATFORM_BUILD_NUMBER || 1,
+        timestamp: new Date().toISOString(),
+        apiVersion: 'v1'  // Week 3: API version indicator
+    }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/health</pre>
+</div>
+</div>
+<h2 style="color: #667eea; margin: 40px 0 20px 0;">Authentication</h2>
+<div class="endpoint" id="POST__auth_register">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/auth/register</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Validation</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">409</span>
+<span class="response-status">201</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/auth/register \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="POST__auth_login">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/auth/login</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get user</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">401</span>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            success: true,
+            user: {
+                id: user.id,
+                email: user.email,
+                username: user.username,
+                tier: user.tier,
+                consciousnessLevel: user.consciousness_level
+            }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/auth/login \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="POST__auth_logout">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/auth/logout</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Verify token (Week 3: Check if session is valid)</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">200</span>
+<pre class="code-block">{ success: true, message: 'Logged out successfully' }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/auth/logout \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__auth_verify">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/auth/verify</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get current user</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">200</span>
+<pre class="code-block">{
+        valid: true,
+        user: {
+            id: req.user.id,
+            email: req.user.email,
+            username: req.user.username,
+            tier: req.user.tier
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/auth/verify</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__auth_me">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/auth/me</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">================================================</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<pre class="code-block">{
+        user: {
+            id: req.user.id,
+            email: req.user.email,
+            username: req.user.username,
+            tier: req.user.tier,
+            consciousnessLevel: req.user.consciousness_level,
+            questionsUsed: req.user.questions_used_this_month,
+            questionsLimit: req.user.questions_limit
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/auth/me</pre>
+</div>
+</div>
+<h2 style="color: #667eea; margin: 40px 0 20px 0;">Philosopher AI</h2>
+<div class="endpoint" id="POST__questions_ask">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/questions/ask</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+<span class="badge rate">⏱️ Rate Limited</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Check if user can ask question (tier limits)</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">403</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/questions/ask \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__questions_history">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/questions/history</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get usage stats</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            questions: result.rows,
+            total: result.rowCount
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/questions/history</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__usage_stats">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/usage/stats</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">================================================</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<span class="response-status">400</span>
+<pre class="code-block">{
+            tier: stats.tier,
+            questionsUsed: stats.questions_used_this_month,
+            questionsLimit: stats.questions_limit,
+            questionsRemaining: Math.max(0, stats.questions_limit - stats.questions_used_this_month),
+            consciousnessLevel: stats.consciousness_level,
+            resetDate: stats.reset_date,
+            canAskQuestion: stats.questions_used_this_month < stats.questions_limit || stats.tier !== 'free'
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/usage/stats</pre>
+</div>
+</div>
+<h2 style="color: #667eea; margin: 40px 0 20px 0;">Payment & Subscriptions</h2>
+<div class="endpoint" id="POST__stripe_create-checkout">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/stripe/create-checkout</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Validate items</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            id: session.id,
+            url: session.url
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/stripe/create-checkout \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="POST__subscriptions_create-checkout">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/subscriptions/create-checkout</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Create or get Stripe customer</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            sessionId: session.id,
+            url: session.url
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/subscriptions/create-checkout \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="POST__stripe_webhook">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/stripe/webhook</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Handle the event</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/stripe/webhook \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__subscriptions_current">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/subscriptions/current</span>
+</div>
+<div class="badges">
+<span class="badge auth">🔒 Auth Required</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">================================================</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<span class="response-status">400</span>
+<span class="response-status">201</span>
+<pre class="code-block">{ subscription: null, tier: 'free' }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/subscriptions/current</pre>
+</div>
+</div>
+<h2 style="color: #667eea; margin: 40px 0 20px 0;">Knowledge Base</h2>
+<div class="endpoint" id="POST__knowledge">
+<div class="endpoint-header">
+<span class="method POST">POST</span>
+<span class="endpoint-path">/knowledge</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Validation</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">201</span>
+<span class="response-status">500</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X POST http://localhost<3002>/knowledge \
+  -H "Content-Type: application/json" \
+  -d '{"key": "value"}'</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__knowledge_search">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/knowledge/search</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Full-text search across title, content, keywords, and categories</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">400</span>
+<span class="response-status">500</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/knowledge/search</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__knowledge_category_category">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/knowledge/category/:category</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get recent knowledge items</p>
+<div class="section">
+<h3>Path Parameters</h3>
+<table class="param-table">
+<tr><th>Name</th><th>Type</th><th>Required</th></tr>
+<tr><td><code>category</code></td><td>string</td><td>Yes</td></tr>
+</table>
+</div>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<pre class="code-block">{"success": true, "data": {}}</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/knowledge/category/<category></pre>
+</div>
+</div>
+<div class="endpoint" id="GET__knowledge_recent">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/knowledge/recent</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get Data Cyclotron metrics</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            statistics: statsResult.rows[0],
+            top_categories: categoriesResult.rows,
+            sources: sourcesResult.rows,
+            recent_activity: recentResult.rows[0]
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/knowledge/recent</pre>
+</div>
+</div>
+<div class="endpoint" id="GET__metrics">
+<div class="endpoint-header">
+<span class="method GET">GET</span>
+<span class="endpoint-path">/metrics</span>
+</div>
+<p style="color: #666; margin-bottom: 20px;">Get overall statistics</p>
+<div class="section">
+<h3>Response</h3>
+<span class="response-status">500</span>
+<pre class="code-block">{
+            statistics: statsResult.rows[0],
+            top_categories: categoriesResult.rows,
+            sources: sourcesResult.rows,
+            recent_activity: recentResult.rows[0]
+        }</pre>
+</div>
+<div class="section">
+<h3>Example Request</h3>
+<pre class="code-block">curl -X GET http://localhost<3002>/metrics</pre>
+</div>
+</div>
+
+        </div>
+    </div>
+</body>
+</html>
