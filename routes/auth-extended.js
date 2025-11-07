@@ -11,6 +11,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { Pool } = require('pg');
+const { sendPasswordResetEmail, sendEmailVerification } = require('../services/emailService');
 
 // Database connection
 const pool = new Pool({
@@ -65,22 +66,15 @@ router.post('/forgot-password', async (req, res) => {
             [user.id, 'password_reset_requested', JSON.stringify({ email })]
         );
 
-        // In production, send email with reset link
-        // For now, return token in development mode
-        const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
+        // Send password reset email
+        const emailResult = await sendPasswordResetEmail(user.email, resetToken, user.name || 'there');
 
+        // In development, also log the reset URL
         if (process.env.NODE_ENV === 'development') {
+            const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
             console.log(`Password reset URL: ${resetUrl}`);
-            return res.status(200).json({
-                success: true,
-                message: 'Password reset link generated',
-                resetUrl: resetUrl, // Only in development
-                token: resetToken   // Only in development
-            });
+            console.log(`Email sent:`, emailResult);
         }
-
-        // TODO: Send email with resetUrl
-        // await sendPasswordResetEmail(user.email, resetUrl);
 
         res.status(200).json({
             success: true,
@@ -242,21 +236,15 @@ router.post('/send-verification-email', async (req, res) => {
             [verificationTokenHash, verificationTokenExpiry, user.id]
         );
 
-        // Create verification URL
-        const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
+        // Send verification email
+        const emailResult = await sendEmailVerification(user.email, verificationToken, user.name || 'there');
 
+        // In development, also log the verification URL
         if (process.env.NODE_ENV === 'development') {
+            const verificationUrl = `${process.env.FRONTEND_URL}/verify-email?token=${verificationToken}`;
             console.log(`Email verification URL: ${verificationUrl}`);
-            return res.status(200).json({
-                success: true,
-                message: 'Verification email would be sent',
-                verificationUrl: verificationUrl, // Only in development
-                token: verificationToken   // Only in development
-            });
+            console.log(`Email sent:`, emailResult);
         }
-
-        // TODO: Send verification email
-        // await sendVerificationEmail(user.email, verificationUrl);
 
         res.status(200).json({
             success: true,

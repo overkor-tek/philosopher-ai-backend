@@ -26,6 +26,7 @@ const { TrinityWebSocketServer } = require('./websocket-server');
 // C1 Mechanic - Production Enhancement Routes
 const logger = require('./utils/logger');
 const { requestLogger, errorLogger } = require('./middleware/logging');
+const { sendWelcomeEmail } = require('./services/emailService');
 
 // ================================================
 // CONFIGURATION
@@ -302,6 +303,11 @@ v1Router.post('/auth/register', async (req, res) => {
              VALUES ($1, $2, $3)`,
             [user.id, 'signup', JSON.stringify({ source: signupSource })]
         );
+
+        // Send welcome email (non-blocking - don't fail registration if email fails)
+        sendWelcomeEmail(user.email, user.username || 'there').catch(error => {
+            logger.error('Welcome email failed:', error);
+        });
 
         res.status(201).json({
             success: true,
