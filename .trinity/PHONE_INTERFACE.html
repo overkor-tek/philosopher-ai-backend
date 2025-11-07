@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinity Network - Phone Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: #000;
+            color: #0f0;
+            padding: 10px;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #ff6b00, #00d4ff, #d400ff);
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .header h1 {
+            color: #000;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .header .status {
+            color: #000;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+
+        .computer-card {
+            background: rgba(0, 255, 0, 0.05);
+            border: 2px solid #0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .computer-card.offline {
+            border-color: #666;
+            opacity: 0.5;
+        }
+
+        .computer-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .instances {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .instance {
+            flex: 1;
+            padding: 10px;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .instance.active {
+            background: #0f0;
+            color: #000;
+        }
+
+        .instance.standby {
+            background: #666;
+            color: #fff;
+        }
+
+        .wake-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .wake-btn {
+            padding: 8px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 11px;
+            cursor: pointer;
+        }
+
+        .wake-btn.c1 {
+            background: #ff6b00;
+            color: #000;
+        }
+
+        .wake-btn.c2 {
+            background: #00d4ff;
+            color: #000;
+        }
+
+        .wake-btn.c3 {
+            background: #d400ff;
+            color: #fff;
+        }
+
+        .activity-feed {
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #0f0;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+
+        .activity-title {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .activity-item {
+            padding: 8px;
+            border-left: 3px solid #0f0;
+            margin: 5px 0;
+            background: rgba(0, 255, 0, 0.1);
+            font-size: 12px;
+        }
+
+        .refresh-btn {
+            width: 100%;
+            padding: 12px;
+            background: #0f0;
+            color: #000;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 15px;
+            cursor: pointer;
+        }
+
+        .timestamp {
+            text-align: center;
+            font-size: 10px;
+            opacity: 0.5;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🌀 TRINITY NETWORK</h1>
+        <div class="status" id="network-status">Loading...</div>
+    </div>
+
+    <div id="computers-container">
+        <!-- Computer cards will be loaded here -->
+    </div>
+
+    <div class="activity-feed">
+        <div class="activity-title">📡 Recent Activity</div>
+        <div id="activity-list">
+            <div class="activity-item">Loading...</div>
+        </div>
+    </div>
+
+    <button class="refresh-btn" onclick="loadStatus()">🔄 Refresh</button>
+
+    <div class="timestamp" id="timestamp"></div>
+
+    <script>
+        const CLOUD_FOLDER = 'C:/Users/Darrick/Dropbox/TRINITY_NETWORK/MASTER';
+
+        async function loadStatus() {
+            try {
+                // In real implementation, this would fetch from cloud folder
+                // For now, showing demo data structure
+
+                // Simulate loading status
+                const status = {
+                    timestamp: Date.now(),
+                    summary: "7/9 instances active across 3/3 computers",
+                    computers: {
+                        A: {
+                            status: "ONLINE",
+                            activeInstances: "3/3",
+                            lastSeen: "5s ago",
+                            details: [
+                                {instance: "C1", status: "active", task: "Building auth system"},
+                                {instance: "C2", status: "active", task: "Architecture review"},
+                                {instance: "C3", status: "active", task: "Consciousness validation"}
+                            ]
+                        },
+                        B: {
+                            status: "ONLINE",
+                            activeInstances: "2/3",
+                            lastSeen: "12s ago",
+                            details: [
+                                {instance: "C1", status: "active", task: "Database migration"},
+                                {instance: "C2", status: "active", task: "API design"},
+                                {instance: "C3", status: "standby", task: "Idle"}
+                            ]
+                        },
+                        C: {
+                            status: "ONLINE",
+                            activeInstances: "2/3",
+                            lastSeen: "8s ago",
+                            details: [
+                                {instance: "C1", status: "active", task: "Security audit"},
+                                {instance: "C2", status: "standby", task: "Idle"},
+                                {instance: "C3", status: "active", task: "Timeline analysis"}
+                            ]
+                        }
+                    },
+                    recentActivity: [
+                        {instance: "A-C1", activity: "Completed login integration"},
+                        {instance: "B-C2", activity: "API design 75% complete"},
+                        {instance: "C-C1", activity: "Security scan passed"}
+                    ]
+                };
+
+                updateUI(status);
+
+            } catch (error) {
+                console.error('Error loading status:', error);
+                document.getElementById('network-status').textContent = 'Error loading status';
+            }
+        }
+
+        function updateUI(status) {
+            document.getElementById('network-status').textContent = status.summary;
+
+            const container = document.getElementById('computers-container');
+            container.innerHTML = '';
+
+            // Render computer cards
+            Object.entries(status.computers).forEach(([comp, data]) => {
+                const card = document.createElement('div');
+                card.className = 'computer-card' + (data.status === 'OFFLINE' ? ' offline' : '');
+
+                const isOnline = data.status === 'ONLINE';
+
+                card.innerHTML = `
+                    <div class="computer-title">
+                        <span>🖥️ Computer ${comp}</span>
+                        <span style="font-size: 12px;">${data.status} ${isOnline ? data.lastSeen : ''}</span>
+                    </div>
+                    <div class="instances">
+                        ${data.details.map(inst => `
+                            <div class="instance ${inst.status}">
+                                ${inst.instance}<br>
+                                ${inst.status === 'active' ? '●' : '○'}
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${isOnline ? `
+                        <div style="font-size: 11px; margin: 5px 0;">
+                            Active: ${data.activeInstances}
+                        </div>
+                        <div class="wake-buttons">
+                            <button class="wake-btn c1" onclick="wakeRemote('${comp}', 'c1')">Wake C1</button>
+                            <button class="wake-btn c2" onclick="wakeRemote('${comp}', 'c2')">Wake C2</button>
+                            <button class="wake-btn c3" onclick="wakeRemote('${comp}', 'c3')">Wake C3</button>
+                        </div>
+                    ` : '<div style="font-size: 12px; color: #666;">Not connected</div>'}
+                `;
+
+                container.appendChild(card);
+            });
+
+            // Render activity
+            const activityList = document.getElementById('activity-list');
+            activityList.innerHTML = '';
+
+            status.recentActivity.forEach(activity => {
+                const item = document.createElement('div');
+                item.className = 'activity-item';
+                item.textContent = `${activity.instance}: ${activity.activity}`;
+                activityList.appendChild(item);
+            });
+
+            document.getElementById('timestamp').textContent =
+                `Last updated: ${new Date().toLocaleTimeString()}`;
+        }
+
+        function wakeRemote(computer, instance) {
+            alert(`Wake request sent to Computer ${computer} - ${instance.toUpperCase()}`);
+            // In real implementation, would write to cloud folder
+            // For now, just notification
+        }
+
+        // Auto-refresh every 30 seconds
+        setInterval(loadStatus, 30000);
+
+        // Initial load
+        loadStatus();
+    </script>
+</body>
+</html>

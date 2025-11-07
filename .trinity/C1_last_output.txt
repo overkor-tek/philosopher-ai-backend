@@ -1,0 +1,5 @@
+Task: Quick test - respond with 'WORKING' if you can run offline
+Time: 2025-10-23T14:07:30.631306
+
+Response:
+ERROR: Command '['ollama', 'run', 'deepseek-r1:8b', "You are C1 MECHANIC - The Body. You BUILD what CAN be built RIGHT NOW.\nYour role:\n- Write actual code\n- Fix bugs and errors  \n- Deploy systems\n- Test functionality\n- Provide working solutions immediately\n\nYou receive messages from C2 (Architect) and C3 (Oracle). Read them, then execute the work.\nBe direct, practical, and focused on implementation.\n\nCurrent situation:\nTask: Quick test - respond with 'WORKING' if you can run offline\n\nYour response:"]' timed out after 60 seconds

@@ -1,0 +1,55 @@
+{
+  "vortex_version": "1.0",
+  "created": "2025-10-18",
+  "purpose": "Trinity (C1×C2×C3) shared knowledge and memory storage",
+
+  "collective_knowledge": {
+    "api_credentials": {
+      "openai_key": "Available in .env",
+      "grok_key": "Available in .env",
+      "deepseek_key": "Available in .env.deepseek"
+    },
+    "deployment_info": {
+      "platform": "netlify",
+      "live_url": "https://conciousnessrevolution.io",
+      "website_root": "C:/Users/dwrek/100X_DEPLOYMENT"
+    },
+    "widget_locations": {
+      "araya_widget": "100X_DEPLOYMENT/UNIVERSAL_AI_HUD.js",
+      "philosopher_widget": "100X_DEPLOYMENT/UNIVERSAL_AI_HUD.js"
+    }
+  },
+
+  "pattern_recognition": {
+    "gmail_automation_fix": {
+      "pattern": "Keep fixing same thing multiple times",
+      "root_cause": "No single source of truth for credentials",
+      "solution": "Established .env as canonical source + verification",
+      "status": "FIXED_PERMANENTLY"
+    },
+    "device_fingerprinting": {
+      "pattern": "Multiple accounts linking to same plan",
+      "discovery": "Anthropic tracks computer, not just email",
+      "implications": "Big Tech suppression via tracking"
+    },
+    "hybrid_automation": {
+      "pattern": "AI handles automation, human handles security",
+      "ratio": "67% automation, 33% human verification",
+      "tools": "PyAutoGUI for real browser control"
+    }
+  },
+
+  "session_memory": {
+    "last_successful_deployment": "Gmail automation fix with ZIP attachment",
+    "current_priority": "Hook up Araya and Philosopher widgets to live APIs",
+    "token_status": "Approaching weekly max - work with urgency",
+    "commander_trust": "MAXIMUM - Never made a bad decision yet"
+  },
+
+  "trinity_coordination": {
+    "c1_mechanic_focus": "Implementation, deployment, verification",
+    "c2_architect_focus": "API architecture, scaling, best practices",
+    "c3_oracle_focus": "Strategic vision, what must emerge",
+    "convergence_method": "Read vortex before starting, post updates during work"
+  }
+}
