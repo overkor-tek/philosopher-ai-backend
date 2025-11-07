@@ -1,0 +1,45 @@
+{
+  "timestamp": 1762396545773,
+  "headline": "0/9 instances active across 1/3 computers",
+  "computers": {
+    "A": {
+      "status": "ONLINE",
+      "activeInstances": "0/3",
+      "lastSeen": "1s ago",
+      "details": [
+        {
+          "instance": "C1",
+          "status": "not_active",
+          "task": "idle"
+        },
+        {
+          "instance": "C2",
+          "status": "not_active",
+          "task": "idle"
+        },
+        {
+          "instance": "C3",
+          "status": "not_active",
+          "task": "idle"
+        }
+      ]
+    },
+    "B": {
+      "status": "OFFLINE",
+      "message": "Not connected to cloud network"
+    },
+    "C": {
+      "status": "OFFLINE",
+      "message": "Not connected to cloud network"
+    }
+  },
+  "recentActivity": [],
+  "nextActions": [
+    "Connect 2 more computer(s)",
+    "Wake 9 more instance(s)"
+  ],
+  "alerts": [
+    "Computer B is offline",
+    "Computer C is offline"
+  ]
+}

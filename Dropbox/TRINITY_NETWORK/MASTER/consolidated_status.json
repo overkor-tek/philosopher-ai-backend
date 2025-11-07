@@ -1,0 +1,53 @@
+{
+  "timestamp": 1762396545773,
+  "computers": {
+    "A": {
+      "computer": "A",
+      "timestamp": 1762396544556,
+      "instances": {
+        "c1": {
+          "status": "not_active"
+        },
+        "c2": {
+          "status": "not_active"
+        },
+        "c3": {
+          "status": "not_active"
+        }
+      },
+      "lastSeen": 1.21670166015625,
+      "connected": true
+    },
+    "B": {
+      "computer": "B",
+      "status": "not_connected",
+      "connected": false
+    },
+    "C": {
+      "computer": "C",
+      "status": "not_connected",
+      "connected": false
+    }
+  },
+  "network": {
+    "totalInstances": 9,
+    "activeInstances": 0,
+    "connectedComputers": 1,
+    "disconnectedComputers": [
+      "B",
+      "C"
+    ]
+  },
+  "instances": {
+    "A-C1": {
+      "status": "not_active"
+    },
+    "A-C2": {
+      "status": "not_active"
+    },
+    "A-C3": {
+      "status": "not_active"
+    }
+  },
+  "recentActivity": []
+}
