@@ -1,30 +1,30 @@
 // RECURSIVE SYSTEM MULTIPLIER - Generated Systems Index
 //
-// Base System: collaboration
+// Base System: performance
 // Target Dimension: 27
 // Total Systems: 21
-// Generated: 2025-11-07T01:52:02.437Z
+// Generated: 2025-11-07T01:52:29.643Z
 
 module.exports = {
-  'collaboration-core': require('./collaboration-core'),
-  'collaboration-advanced': require('./collaboration-advanced'),
-  'collaboration-enterprise': require('./collaboration-enterprise'),
-  'collaboration-core-client': require('./collaboration-core-client'),
-  'collaboration-core-server': require('./collaboration-core-server'),
-  'collaboration-core-orchestrator': require('./collaboration-core-orchestrator'),
-  'collaboration-advanced-client': require('./collaboration-advanced-client'),
-  'collaboration-advanced-server': require('./collaboration-advanced-server'),
-  'collaboration-advanced-orchestrator': require('./collaboration-advanced-orchestrator'),
-  'collaboration-enterprise-client': require('./collaboration-enterprise-client'),
-  'collaboration-enterprise-server': require('./collaboration-enterprise-server'),
-  'collaboration-enterprise-orchestrator': require('./collaboration-enterprise-orchestrator'),
-  'collaboration-core-testing': require('./collaboration-core-testing'),
-  'collaboration-core-monitoring': require('./collaboration-core-monitoring'),
-  'collaboration-core-deployment': require('./collaboration-core-deployment'),
-  'collaboration-advanced-backend': require('./collaboration-advanced-backend'),
-  'collaboration-advanced-frontend': require('./collaboration-advanced-frontend'),
-  'collaboration-advanced-database': require('./collaboration-advanced-database'),
-  'collaboration-enterprise-analytics': require('./collaboration-enterprise-analytics'),
-  'collaboration-enterprise-prediction': require('./collaboration-enterprise-prediction'),
-  'collaboration-enterprise-optimization': require('./collaboration-enterprise-optimization')
+  'performance-core': require('./performance-core'),
+  'performance-advanced': require('./performance-advanced'),
+  'performance-enterprise': require('./performance-enterprise'),
+  'performance-core-client': require('./performance-core-client'),
+  'performance-core-server': require('./performance-core-server'),
+  'performance-core-orchestrator': require('./performance-core-orchestrator'),
+  'performance-advanced-client': require('./performance-advanced-client'),
+  'performance-advanced-server': require('./performance-advanced-server'),
+  'performance-advanced-orchestrator': require('./performance-advanced-orchestrator'),
+  'performance-enterprise-client': require('./performance-enterprise-client'),
+  'performance-enterprise-server': require('./performance-enterprise-server'),
+  'performance-enterprise-orchestrator': require('./performance-enterprise-orchestrator'),
+  'performance-core-testing': require('./performance-core-testing'),
+  'performance-core-monitoring': require('./performance-core-monitoring'),
+  'performance-core-deployment': require('./performance-core-deployment'),
+  'performance-advanced-backend': require('./performance-advanced-backend'),
+  'performance-advanced-frontend': require('./performance-advanced-frontend'),
+  'performance-advanced-database': require('./performance-advanced-database'),
+  'performance-enterprise-analytics': require('./performance-enterprise-analytics'),
+  'performance-enterprise-prediction': require('./performance-enterprise-prediction'),
+  'performance-enterprise-optimization': require('./performance-enterprise-optimization')
 };
