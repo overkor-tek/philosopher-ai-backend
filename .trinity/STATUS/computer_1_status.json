@@ -2,8 +2,8 @@
   "computer": "Computer_1",
   "hostname": "DESKTOP-S72LRRO",
   "status": "ONLINE",
-  "timestamp": "2025-11-07T03:25:34.526Z",
-  "broadcast_number": 288,
+  "timestamp": "2025-11-07T03:26:04.530Z",
+  "broadcast_number": 289,
   "looking_for": "Computer_2",
-  "uptime_seconds": 8616.7262806
+  "uptime_seconds": 8646.7295221
 }
