@@ -27,8 +27,11 @@ async function initializeDatabase(pool) {
                 CREATE TABLE IF NOT EXISTS users (
                     id SERIAL PRIMARY KEY,
                     email VARCHAR(255) UNIQUE NOT NULL,
-                    password VARCHAR(255) NOT NULL,
-                    name VARCHAR(255) NOT NULL,
+                    password_hash VARCHAR(255) NOT NULL,
+                    name VARCHAR(255),
+                    username VARCHAR(255),
+                    signup_source VARCHAR(50) DEFAULT 'direct',
+                    tier VARCHAR(50) DEFAULT 'free',
                     pin_hash VARCHAR(255),
                     subscription_tier VARCHAR(50) DEFAULT 'free',
                     anthropic_api_key VARCHAR(255),
