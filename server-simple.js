@@ -9,6 +9,7 @@ require('dotenv').config();
 
 const express = require('express');
 const cors = require('cors');
+const cookieParser = require('cookie-parser');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sqlite3 = require('sqlite3').verbose();
@@ -28,8 +29,36 @@ const JWT_SECRET = process.env.JWT_SECRET || 'consciousness_revolution_test_secr
 
 const app = express();
 
-// Basic middleware
-app.use(cors({ origin: '*', credentials: true }));
+// CORS configuration for cross-subdomain sessions
+const corsOptions = {
+    origin: function(origin, callback) {
+        // Allow requests with no origin (mobile apps, curl, etc.)
+        if (!origin) return callback(null, true);
+
+        // Allow localhost for development
+        if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+            return callback(null, true);
+        }
+
+        // Allow consciousnessrevolution.io and all subdomains
+        if (origin.endsWith('.consciousnessrevolution.io') || origin === 'https://consciousnessrevolution.io') {
+            return callback(null, true);
+        }
+
+        // Allow Railway domains
+        if (origin.includes('.railway.app')) {
+            return callback(null, true);
+        }
+
+        // Reject other origins
+        callback(new Error('Not allowed by CORS'));
+    },
+    credentials: true, // Allow cookies
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json({ limit: '1mb' }));
 
 // ================================================
@@ -66,6 +95,17 @@ async function initDatabase() {
             expires_at DATETIME,
             FOREIGN KEY (user_id) REFERENCES users(id)
         );
+
+        CREATE TABLE IF NOT EXISTS error_logs (
+            id TEXT PRIMARY KEY,
+            user_id TEXT,
+            error_message TEXT NOT NULL,
+            error_stack TEXT,
+            page_url TEXT,
+            user_agent TEXT,
+            severity TEXT DEFAULT 'error',
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
     `);
 
     console.log('✅ SQLite database initialized: consciousness.db');
@@ -79,21 +119,52 @@ function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
 }
 
+/**
+ * Set authentication cookie for cross-subdomain sessions
+ *
+ * @param {object} res - Express response object
+ * @param {string} token - JWT token
+ */
+function setAuthCookie(res, token) {
+    const isProduction = process.env.NODE_ENV === 'production';
+    const domain = isProduction ? '.consciousnessrevolution.io' : undefined;
+
+    res.cookie('auth_token', token, {
+        httpOnly: true,        // Prevent XSS attacks
+        secure: isProduction,  // HTTPS only in production
+        sameSite: isProduction ? 'none' : 'lax', // Cross-site in production
+        domain: domain,        // Cross-subdomain access
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+        path: '/'
+    });
+}
+
 // ================================================
-// AUTHENTICATION ENDPOINTS
+// AUTHENTICATION ENDPOINTS - V1 API
 // ================================================
 
-// Health check
+// Health check (non-versioned for convenience)
 app.get('/api/health', (req, res) => {
     res.json({
         status: 'healthy',
+        version: 'v1',
+        database: db ? 'connected' : 'disconnected',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// V1 Health check
+app.get('/api/v1/health', (req, res) => {
+    res.json({
+        status: 'healthy',
+        version: 'v1',
         database: db ? 'connected' : 'disconnected',
         timestamp: new Date().toISOString()
     });
 });
 
 // Register new user
-app.post('/api/auth/register', async (req, res) => {
+app.post('/api/v1/auth/register', async (req, res) => {
     try {
         const { email, password, name, pin } = req.body;
 
@@ -122,6 +193,9 @@ app.post('/api/auth/register', async (req, res) => {
         // Generate JWT
         const token = jwt.sign({ userId, email }, JWT_SECRET, { expiresIn: '7d' });
 
+        // Set cookie for cross-subdomain sessions
+        setAuthCookie(res, token);
+
         res.status(201).json({
             success: true,
             user: { id: userId, email, name: name || 'User' },
@@ -135,7 +209,7 @@ app.post('/api/auth/register', async (req, res) => {
 });
 
 // Login with email/password
-app.post('/api/auth/login', async (req, res) => {
+app.post('/api/v1/auth/login', async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -158,6 +232,9 @@ app.post('/api/auth/login', async (req, res) => {
         // Generate JWT
         const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
 
+        // Set cookie for cross-subdomain sessions
+        setAuthCookie(res, token);
+
         res.json({
             success: true,
             user: {
@@ -176,7 +253,7 @@ app.post('/api/auth/login', async (req, res) => {
 });
 
 // Login with PIN (for simple 4-digit PIN authentication)
-app.post('/api/auth/login-pin', async (req, res) => {
+app.post('/api/v1/auth/login-pin', async (req, res) => {
     try {
         const { pin } = req.body;
 
@@ -192,6 +269,9 @@ app.post('/api/auth/login-pin', async (req, res) => {
 
         // Generate JWT
         const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, { expiresIn: '7d' });
+
+        // Set cookie for cross-subdomain sessions
+        setAuthCookie(res, token);
 
         res.json({
             success: true,
@@ -212,7 +292,7 @@ app.post('/api/auth/login-pin', async (req, res) => {
 });
 
 // Get current user (requires JWT)
-app.get('/api/auth/me', async (req, res) => {
+app.get('/api/v1/auth/me', async (req, res) => {
     try {
         const authHeader = req.headers.authorization;
         if (!authHeader) {
@@ -244,6 +324,102 @@ app.get('/api/auth/me', async (req, res) => {
 });
 
 // ================================================
+// ERROR LOGGING ENDPOINTS
+// ================================================
+
+// Log client-side error
+app.post('/api/v1/errors/log', async (req, res) => {
+    try {
+        const { message, stack, url, userAgent, severity = 'error' } = req.body;
+
+        if (!message) {
+            return res.status(400).json({ error: 'Error message required' });
+        }
+
+        // Get user ID from JWT if available
+        let userId = null;
+        const authHeader = req.headers.authorization;
+        if (authHeader) {
+            try {
+                const token = authHeader.replace('Bearer ', '');
+                const decoded = jwt.verify(token, JWT_SECRET);
+                userId = decoded.userId;
+            } catch (e) {
+                // Invalid token, but still log the error
+            }
+        }
+
+        // Create error log
+        const errorId = generateId();
+        await db.run(
+            `INSERT INTO error_logs (id, user_id, error_message, error_stack, page_url, user_agent, severity)
+             VALUES (?, ?, ?, ?, ?, ?, ?)`,
+            [errorId, userId, message, stack || null, url || null, userAgent || null, severity]
+        );
+
+        res.json({ success: true, id: errorId });
+
+    } catch (error) {
+        console.error('Error logging failed:', error);
+        res.status(500).json({ error: 'Failed to log error' });
+    }
+});
+
+// Get recent errors
+app.get('/api/v1/errors/recent', async (req, res) => {
+    try {
+        const limit = parseInt(req.query.limit) || 50;
+        const severity = req.query.severity || null;
+
+        let query = 'SELECT * FROM error_logs';
+        const params = [];
+
+        if (severity) {
+            query += ' WHERE severity = ?';
+            params.push(severity);
+        }
+
+        query += ' ORDER BY created_at DESC LIMIT ?';
+        params.push(limit);
+
+        const errors = await db.all(query, params);
+
+        res.json({ success: true, errors, count: errors.length });
+
+    } catch (error) {
+        console.error('Error retrieval failed:', error);
+        res.status(500).json({ error: 'Failed to retrieve errors' });
+    }
+});
+
+// Get error stats
+app.get('/api/v1/errors/stats', async (req, res) => {
+    try {
+        const last24h = new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString();
+
+        const [totalCount, last24hCount, bySeverity] = await Promise.all([
+            db.get('SELECT COUNT(*) as count FROM error_logs'),
+            db.get('SELECT COUNT(*) as count FROM error_logs WHERE created_at > ?', [last24h]),
+            db.all('SELECT severity, COUNT(*) as count FROM error_logs GROUP BY severity')
+        ]);
+
+        res.json({
+            success: true,
+            total: totalCount.count,
+            last24h: last24hCount.count,
+            bySeverity: bySeverity.reduce((acc, row) => {
+                acc[row.severity] = row.count;
+                return acc;
+            }, {})
+        });
+
+    } catch (error) {
+        console.error('Error stats failed:', error);
+        res.status(500).json({ error: 'Failed to get error stats' });
+    }
+});
+
+// ================================================
 // START SERVER
 // ================================================
 
@@ -261,12 +437,13 @@ async function startServer() {
             console.log('✅ SQLite database ready');
             console.log('✅ CORS enabled (all origins)');
             console.log('');
-            console.log('📡 Available endpoints:');
+            console.log('📡 Available endpoints (v1):');
             console.log('   GET  /api/health');
-            console.log('   POST /api/auth/register');
-            console.log('   POST /api/auth/login');
-            console.log('   POST /api/auth/login-pin');
-            console.log('   GET  /api/auth/me');
+            console.log('   GET  /api/v1/health');
+            console.log('   POST /api/v1/auth/register');
+            console.log('   POST /api/v1/auth/login');
+            console.log('   POST /api/v1/auth/login-pin');
+            console.log('   GET  /api/v1/auth/me');
             console.log('');
             console.log('🔥 Ready for connections!');
             console.log('');
