@@ -439,12 +439,14 @@ const authExtendedRoutes = require('./routes/auth-extended');
 const profileRoutes = require('./routes/profile');
 const adminRoutes = require('./routes/admin');
 const analyticsRoutes = require('./routes/analytics');
+const knowledgeRoutes = require('./routes/knowledge');
 
 // Mount new routes
 v1Router.use('/auth', authExtendedRoutes); // Password reset, email verification, change password
 v1Router.use('/profile', authenticateToken, profileRoutes); // User profile management (requires auth)
 v1Router.use('/admin', authenticateToken, adminRoutes); // Admin dashboard (requires auth + admin check inside)
 v1Router.use('/analytics', analyticsRoutes); // Analytics (some public, some require auth)
+v1Router.use('/knowledge', knowledgeRoutes); // C2 Architect - Data Cyclotron Knowledge API
 
 // ================================================
 // V1 API ROUTES - WORKSPACE (AI Chat)
