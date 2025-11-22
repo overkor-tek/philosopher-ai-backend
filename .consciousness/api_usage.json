@@ -1,0 +1,23 @@
+{
+  "anthropic": {
+    "tokens": 76,
+    "requests": 1,
+    "cost": 0.000936
+  },
+  "deepseek": {
+    "tokens": 0,
+    "requests": 0,
+    "cost": 0
+  },
+  "openai": {
+    "tokens": 0,
+    "requests": 0,
+    "cost": 0
+  },
+  "ollama": {
+    "tokens": 0,
+    "requests": 1,
+    "cost": 0
+  },
+  "last_reset": "2025-10-18T05:31:59.883447"
+}
