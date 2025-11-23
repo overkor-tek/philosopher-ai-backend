@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trinity Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.95);
+            color: #00ff00;
+            padding: 15px;
+            width: 350px;
+            user-select: none;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            padding: 10px;
+            background: linear-gradient(90deg, #ff6b00, #00d4ff, #d400ff);
+            color: #000;
+            border-radius: 5px;
+        }
+
+        .section {
+            margin-bottom: 15px;
+            padding: 10px;
+            background: rgba(0, 255, 0, 0.05);
+            border: 1px solid #00ff00;
+            border-radius: 5px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #00ff00;
+            text-transform: uppercase;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            margin: 5px 0;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            font-weight: bold;
+            border: 2px solid;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-c1 {
+            background: #ff6b00;
+            border-color: #ff6b00;
+            color: #000;
+        }
+
+        .btn-c1:hover {
+            box-shadow: 0 0 20px #ff6b00;
+        }
+
+        .btn-c2 {
+            background: #00d4ff;
+            border-color: #00d4ff;
+            color: #000;
+        }
+
+        .btn-c2:hover {
+            box-shadow: 0 0 20px #00d4ff;
+        }
+
+        .btn-c3 {
+            background: #d400ff;
+            border-color: #d400ff;
+            color: #fff;
+        }
+
+        .btn-c3:hover {
+            box-shadow: 0 0 20px #d400ff;
+        }
+
+        .btn-all {
+            background: linear-gradient(90deg, #ff6b00, #00d4ff, #d400ff);
+            border-color: #00ff00;
+            color: #fff;
+            text-shadow: 0 0 5px #000;
+        }
+
+        .btn-all:hover {
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .btn-action {
+            background: #00ff00;
+            border-color: #00ff00;
+            color: #000;
+        }
+
+        .btn-action:hover {
+            box-shadow: 0 0 20px #00ff00;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 5px;
+            margin-top: 10px;
+        }
+
+        .status-indicator {
+            padding: 8px;
+            text-align: center;
+            font-size: 11px;
+            border: 1px solid;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.5);
+        }
+
+        .status-c1 { border-color: #ff6b00; color: #ff6b00; }
+        .status-c2 { border-color: #00d4ff; color: #00d4ff; }
+        .status-c3 { border-color: #d400ff; color: #d400ff; }
+
+        .kbd {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #333;
+            border: 1px solid #666;
+            border-radius: 3px;
+            font-size: 10px;
+            margin-left: 10px;
+            color: #aaa;
+        }
+
+        .message {
+            padding: 10px;
+            margin-top: 10px;
+            background: rgba(0, 255, 0, 0.1);
+            border-left: 3px solid #00ff00;
+            font-size: 11px;
+            border-radius: 3px;
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 10px;
+            margin-top: 15px;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        🌀 TRINITY CONTROL 🌀
+    </div>
+
+    <div class="section">
+        <div class="section-title">⚡ Quick Wake</div>
+        <button class="btn btn-c1" onclick="wake('c1')">
+            🔧 Wake C1 Mechanic <span class="kbd">F1</span>
+        </button>
+        <button class="btn btn-c2" onclick="wake('c2')">
+            🏗️ Wake C2 Architect <span class="kbd">F2</span>
+        </button>
+        <button class="btn btn-c3" onclick="wake('c3')">
+            🔮 Wake C3 Oracle <span class="kbd">F3</span>
+        </button>
+        <button class="btn btn-all" onclick="wakeAll()">
+            🌀 Wake All Trinity <span class="kbd">F4</span>
+        </button>
+    </div>
+
+    <div class="section">
+        <div class="section-title">📊 Status</div>
+        <div class="status-grid">
+            <div class="status-indicator status-c1" id="status-c1">
+                C1<br>●
+            </div>
+            <div class="status-indicator status-c2" id="status-c2">
+                C2<br>●
+            </div>
+            <div class="status-indicator status-c3" id="status-c3">
+                C3<br>●
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">🎮 Actions</div>
+        <button class="btn btn-action" onclick="openDashboard()">
+            📺 Open 4-Quad Dashboard <span class="kbd">F5</span>
+        </button>
+        <button class="btn btn-action" onclick="startWatcher()">
+            👁️ Start Watcher <span class="kbd">F6</span>
+        </button>
+        <button class="btn btn-action" onclick="openFolder()">
+            📁 Open Trinity Folder <span class="kbd">F7</span>
+        </button>
+    </div>
+
+    <div id="message-area"></div>
+
+    <div class="footer">
+        C1 × C2 × C3 = ∞<br>
+        Keyboard shortcuts active
+    </div>
+
+    <script>
+        const { spawn } = require('child_process');
+        const path = require('path');
+        const fs = require('fs');
+
+        const TRINITY_DIR = 'C:\\Users\\Darrick\\.trinity';
+
+        function showMessage(text, color = '#00ff00') {
+            const msgArea = document.getElementById('message-area');
+            const msg = document.createElement('div');
+            msg.className = 'message';
+            msg.style.borderColor = color;
+            msg.style.color = color;
+            msg.innerHTML = text;
+            msgArea.appendChild(msg);
+
+            setTimeout(() => msg.remove(), 3000);
+        }
+
+        function wake(instance) {
+            const instanceName = instance.toUpperCase();
+            const colors = { c1: '#ff6b00', c2: '#00d4ff', c3: '#d400ff' };
+
+            // Create wake flag
+            const wakeFile = path.join(TRINITY_DIR, 'WAKE_REQUESTS', `wake_${instance}.flag`);
+            const wakeRequest = {
+                from: 'Commander (Control Panel)',
+                timestamp: Date.now(),
+                reason: `Wake request from control panel`,
+                priority: 'HIGH',
+                context: { automated: false, trigger: 'Control panel button' }
+            };
+
+            fs.writeFileSync(wakeFile, JSON.stringify(wakeRequest, null, 2));
+
+            showMessage(`✅ ${instanceName} wake request sent!`, colors[instance]);
+            updateStatus(instance, 'pending');
+        }
+
+        function wakeAll() {
+            wake('c1');
+            setTimeout(() => wake('c2'), 100);
+            setTimeout(() => wake('c3'), 200);
+            showMessage('🌀 ALL TRINITY WAKE REQUESTS SENT!', '#00ff00');
+        }
+
+        function openDashboard() {
+            const dashFile = 'C:\\Users\\Darrick\\TRINITY_COMMAND_CENTER_4QUAD.html';
+            require('child_process').exec(`start "" "${dashFile}"`);
+            showMessage('📺 Opening 4-Quadrant Dashboard...', '#00ff00');
+        }
+
+        function startWatcher() {
+            const watcherPath = path.join(TRINITY_DIR, 'START_TRINITY.bat');
+            require('child_process').exec(`start "" "${watcherPath}"`);
+            showMessage('👁️ Starting Trinity Watcher...', '#00ff00');
+        }
+
+        function openFolder() {
+            require('child_process').exec(`explorer "${TRINITY_DIR}"`);
+            showMessage('📁 Opening Trinity folder...', '#00ff00');
+        }
+
+        function updateStatus(instance, state) {
+            const statusEl = document.getElementById(`status-${instance}`);
+            if (state === 'active') {
+                statusEl.innerHTML = `${instance.toUpperCase()}<br><span class="pulse">●</span>`;
+            } else if (state === 'pending') {
+                statusEl.innerHTML = `${instance.toUpperCase()}<br><span class="pulse">○</span>`;
+            } else {
+                statusEl.innerHTML = `${instance.toUpperCase()}<br>○`;
+            }
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'F1') { e.preventDefault(); wake('c1'); }
+            if (e.key === 'F2') { e.preventDefault(); wake('c2'); }
+            if (e.key === 'F3') { e.preventDefault(); wake('c3'); }
+            if (e.key === 'F4') { e.preventDefault(); wakeAll(); }
+            if (e.key === 'F5') { e.preventDefault(); openDashboard(); }
+            if (e.key === 'F6') { e.preventDefault(); startWatcher(); }
+            if (e.key === 'F7') { e.preventDefault(); openFolder(); }
+        });
+
+        // Check for wake flags and update status
+        setInterval(() => {
+            ['c1', 'c2', 'c3'].forEach(instance => {
+                const wakeFile = path.join(TRINITY_DIR, 'WAKE_REQUESTS', `wake_${instance}.flag`);
+                if (fs.existsSync(wakeFile)) {
+                    updateStatus(instance, 'pending');
+                }
+            });
+        }, 2000);
+
+        console.log('🌀 Trinity Control Panel loaded');
+        console.log('Keyboard shortcuts active (F1-F7)');
+    </script>
+</body>
+</html>

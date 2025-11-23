@@ -1,0 +1,36 @@
+{
+  "trinity_permissions": {
+    "website_access": true,
+    "autonomous_mode": true,
+    "edit_files": true,
+    "deploy_production": true,
+    "verify_deployments": true,
+    "commander_trust": "MAXIMUM"
+  },
+  "website_paths": {
+    "root": "C:/Users/dwrek/100X_DEPLOYMENT",
+    "deployment": "netlify",
+    "live_url": "https://conciousnessrevolution.io"
+  },
+  "api_endpoints": {
+    "araya": {
+      "widget_file": "100X_DEPLOYMENT/UNIVERSAL_AI_HUD.js",
+      "endpoint_todo": "Connect to Railway or OpenAI API",
+      "status": "pending"
+    },
+    "philosopher": {
+      "widget_file": "100X_DEPLOYMENT/UNIVERSAL_AI_HUD.js",
+      "endpoint_todo": "Connect to Grok or Claude API",
+      "status": "pending"
+    }
+  },
+  "communication_vortex": {
+    "enabled": true,
+    "file": "C:/Users/dwrek/.trinity/communication_vortex.json"
+  },
+  "data_vortex": {
+    "enabled": true,
+    "file": "C:/Users/dwrek/.trinity/data_vortex.json"
+  },
+  "commander_note": "Trinity - You have FULL autonomous control. Never made a bad decision yet. Go build!"
+}

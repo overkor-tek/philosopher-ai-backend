@@ -1,0 +1,74 @@
+{
+  "tasks": [
+    {
+      "id": "c774317d",
+      "title": "Complete setup and send confirmation",
+      "description": "Run FINAL_SETUP_DO_THIS_NOW.txt and send ready.txt back",
+      "status": "pending",
+      "priority": "normal",
+      "assigned_to": "desktop-msmcfh2",
+      "created_by": "DESKTOP-S72LRRO",
+      "created_at": "2025-11-21T23:49:21.164812",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null
+    },
+    {
+      "id": "90995d5f",
+      "title": "Complete setup and send confirmation",
+      "description": "Run FINAL_SETUP_DO_THIS_NOW.txt and send ready.txt back",
+      "status": "pending",
+      "priority": "normal",
+      "assigned_to": "desktop-s72lrro",
+      "created_by": "DESKTOP-S72LRRO",
+      "created_at": "2025-11-21T23:49:21.165961",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null
+    },
+    {
+      "id": "1484e4c5",
+      "title": "Run capability report",
+      "description": "Execute REPORT_YOUR_CAPABILITIES.txt and send results",
+      "status": "pending",
+      "priority": "normal",
+      "assigned_to": "desktop-msmcfh2",
+      "created_by": "DESKTOP-S72LRRO",
+      "created_at": "2025-11-21T23:49:21.166912",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null
+    },
+    {
+      "id": "bc61794d",
+      "title": "Run capability report",
+      "description": "Execute REPORT_YOUR_CAPABILITIES.txt and send results",
+      "status": "pending",
+      "priority": "normal",
+      "assigned_to": "desktop-s72lrro",
+      "created_by": "DESKTOP-S72LRRO",
+      "created_at": "2025-11-21T23:49:21.167587",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null
+    },
+    {
+      "id": "563a3979",
+      "title": "Full system rake",
+      "description": "Run MULTI_COMPUTER_RAKE_SYSTEM.py --full-rake and send index",
+      "status": "pending",
+      "priority": "high",
+      "assigned_to": null,
+      "created_by": "DESKTOP-S72LRRO",
+      "created_at": "2025-11-21T23:49:21.168155",
+      "claimed_by": null,
+      "claimed_at": null,
+      "completed_at": null,
+      "result": null
+    }
+  ]
+}

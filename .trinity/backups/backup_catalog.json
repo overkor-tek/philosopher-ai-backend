@@ -1,0 +1,19 @@
+{
+  "created_at": "2025-11-07T12:40:32.373Z",
+  "backups": [
+    {
+      "backup_id": "backup_1762519232376",
+      "timestamp": "2025-11-07T12:40:32.376Z",
+      "total_files": 318,
+      "total_size": 2851086,
+      "clouds_synced": 3,
+      "type": "automatic"
+    }
+  ],
+  "stats": {
+    "total_backups": 1,
+    "total_restores": 0,
+    "last_backup": "2025-11-07T12:40:32.376Z",
+    "last_restore": null
+  }
+}

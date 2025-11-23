@@ -1,0 +1,51 @@
+{
+  "created_at": "2025-11-07T12:42:31.003Z",
+  "samples": [
+    {
+      "timestamp": "2025-11-07T12:42:31.005Z",
+      "system": {
+        "cpu_usage": 8,
+        "cpu_count": 12,
+        "memory_total": 68580974592,
+        "memory_used": 28222046208,
+        "memory_free": 40358928384,
+        "memory_usage_percent": "41.15",
+        "platform": "win32",
+        "uptime": 134419.625
+      },
+      "process": {
+        "heap_used": 4649152,
+        "heap_total": 6348800,
+        "external": 1669727,
+        "rss": 38027264,
+        "heap_usage_percent": "73.23",
+        "pid": 79432,
+        "uptime": 0.0314231
+      },
+      "disk": [],
+      "trinity": {
+        "background_processes": 5,
+        "cloud_sync_status": {
+          "TRINITY_NETWORK": true
+        },
+        "file_counts": {
+          "core_systems": 91,
+          "coordination": 12,
+          "analytics": 20,
+          "documentation": 66,
+          "backups": 2
+        },
+        "recent_activity": {}
+      }
+    }
+  ],
+  "summary": {
+    "avg_cpu_usage": "8.00",
+    "avg_memory_usage": "41.15",
+    "avg_response_time": 0,
+    "peak_cpu": 8,
+    "peak_memory": 41.15,
+    "total_samples": 1
+  },
+  "last_updated": "2025-11-07T12:42:31.037Z"
+}
