@@ -120,15 +120,15 @@ jobs:
             const branch = '${{ github.ref_name }}';
             
             subject = \`💖 New Commit to \${branch}: \${commitMessage}\`;
-            message = \`
-              <h2>New Commit to \${repo}</h2>
-              <p><strong>Branch:</strong> \${branch}</p>
-              <p><strong>Commit:</strong> \${commitMessage}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${commitUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Commit</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
+            message = `
+  <h2>New Commit to ${repo}</h2>
+  <p><strong>Branch:</strong> ${branch}</p>
+  <p><strong>Commit:</strong> ${commitMessage}</p>
+  <p><strong>By:</strong> ${actor}</p>
+  <p><a href="${commitUrl}" style="background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;">View Commit</a></p>
+  <hr>
+  <p style="color:#666;">Part of The Pink Revolution 💖</p>
+`;
           }
 
           const mailOptions = {
