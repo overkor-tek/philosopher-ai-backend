@@ -18,10 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '18'
 
@@ -30,87 +30,79 @@ jobs:
 
       - name: Send notification email
         env:
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
           EMAIL_USER: ${{ secrets.EMAIL_USER }}
           EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          RECIPIENT_EMAIL: darrick.preble@gmail.com
+          RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: |
           node -e "
           const nodemailer = require('nodemailer');
-          
+
           const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: process.env.EMAIL_PORT,
+            service: 'gmail',
             auth: {
               user: process.env.EMAIL_USER,
               pass: process.env.EMAIL_PASS
             }
           });
 
-          let subject = '';
-          let message = '';
+          const eventName = '${{ github.event_name }}';
           const repo = '${{ github.repository }}';
           const actor = '${{ github.actor }}';
-          const eventName = '${{ github.event_name }}';
+          const discussionUrl = '${{ github.event.discussion.html_url }}';
+
+          let subject = '';
+          let message = '';
 
           if (eventName === 'issues') {
-            const action = '${{ github.event.action }}';
             const issueTitle = '${{ github.event.issue.title }}';
-            const issueNumber = '${{ github.event.issue.number }}';
             const issueUrl = '${{ github.event.issue.html_url }}';
-            
-            subject = \`💖 Issue \${action}: #\${issueNumber} - \${issueTitle}\`;
+            const action = '${{ github.event.action }}';
+
+            subject = \`🌸 Issue \${action} in \${repo}\`;
             message = \`
-              <h2>Issue \${action} in \${repo}</h2>
-              <p><strong>Issue:</strong> #\${issueNumber} - \${issueTitle}</p>
+              <h2>Issue \${action.charAt(0).toUpperCase() + action.slice(1)} in \${repo}</h2>
+              <p><strong>Issue:</strong> \${issueTitle}</p>
               <p><strong>By:</strong> \${actor}</p>
-              <p><strong>Action:</strong> \${action}</p>
-              <p><a href=\"\${issueUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Issue</a></p>
+              <p><a href=\"\${issueUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;\">View Issue</a></p>
               <hr>
               <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
             \`;
           } else if (eventName === 'pull_request') {
-            const action = '${{ github.event.action }}';
             const prTitle = '${{ github.event.pull_request.title }}';
-            const prNumber = '${{ github.event.pull_request.number }}';
             const prUrl = '${{ github.event.pull_request.html_url }}';
-            
-            subject = \`💖 Pull Request \${action}: #\${prNumber} - \${prTitle}\`;
+            const action = '${{ github.event.action }}';
+
+            subject = \`🌸 Pull Request \${action} in \${repo}\`;
             message = \`
-              <h2>Pull Request \${action} in \${repo}</h2>
-              <p><strong>PR:</strong> #\${prNumber} - \${prTitle}</p>
+              <h2>Pull Request \${action.charAt(0).toUpperCase() + action.slice(1)} in \${repo}</h2>
+              <p><strong>PR:</strong> \${prTitle}</p>
               <p><strong>By:</strong> \${actor}</p>
-              <p><strong>Action:</strong> \${action}</p>
-              <p><a href=\"\${prUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Pull Request</a></p>
+              <p><a href=\"\${prUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;\">View Pull Request</a></p>
               <hr>
               <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
             \`;
           } else if (eventName === 'release') {
             const releaseName = '${{ github.event.release.name }}';
-            const releaseTag = '${{ github.event.release.tag_name }}';
             const releaseUrl = '${{ github.event.release.html_url }}';
-            
-            subject = \`🚀 New Release: \${releaseName || releaseTag}\`;
+
+            subject = \`🌸 New Release in \${repo}\`;
             message = \`
-              <h2>New Release Published in \${repo}</h2>
-              <p><strong>Release:</strong> \${releaseName || releaseTag}</p>
-              <p><strong>Tag:</strong> \${releaseTag}</p>
+              <h2>New Release in \${repo}</h2>
+              <p><strong>Release:</strong> \${releaseName}</p>
               <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${releaseUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Release</a></p>
+              <p><a href=\"\${releaseUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;\">View Release</a></p>
               <hr>
               <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
             \`;
           } else if (eventName === 'discussion') {
             const discussionTitle = '${{ github.event.discussion.title }}';
-            const discussionUrl = '${{ github.event.discussion.html_url }}';
-            
-            subject = \`💬 New Discussion: \${discussionTitle}\`;
+
+            subject = \`🌸 New Discussion in \${repo}\`;
             message = \`
               <h2>New Discussion in \${repo}</h2>
               <p><strong>Discussion:</strong> \${discussionTitle}</p>
               <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${discussionUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Discussion</a></p>
+              <p><a href=\"\${discussionUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;\">View Discussion</a></p>
               <hr>
               <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
             \`;
@@ -118,17 +110,17 @@ jobs:
             const commitMessage = '${{ github.event.head_commit.message }}';
             const commitUrl = '${{ github.event.head_commit.url }}';
             const branch = '${{ github.ref_name }}';
-            
-            subject = \`💖 New Commit to \${branch}: \${commitMessage}\`;
-            message = `
-  <h2>New Commit to ${repo}</h2>
-  <p><strong>Branch:</strong> ${branch}</p>
-  <p><strong>Commit:</strong> ${commitMessage}</p>
-  <p><strong>By:</strong> ${actor}</p>
-  <p><a href="${commitUrl}" style="background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;">View Commit</a></p>
-  <hr>
-  <p style="color:#666;">Part of The Pink Revolution 💖</p>
-`;
+
+            subject = \`🌸 New Commit to \${branch}: \${commitMessage}\`;
+            message = \`
+              <h2>New Commit to \${repo}</h2>
+              <p><strong>Branch:</strong> \${branch}</p>
+              <p><strong>Commit:</strong> \${commitMessage}</p>
+              <p><strong>By:</strong> \${actor}</p>
+              <p><a href=\"\${commitUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;\">View Commit</a></p>
+              <hr>
+              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
+            \`;
           }
 
           const mailOptions = {
