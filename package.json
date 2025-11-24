@@ -5,9 +5,13 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
+    "start:production": "node server-production.js",
+    "start:secure": "node server-secure.js",
     "dev": "nodemon server.js",
+    "dev:production": "nodemon server-production.js",
     "test": "jest --coverage",
     "test:sqlite": "node server-sqlite.js",
+    "db:migrate": "node migrate-database-pg.js",
     "db:setup": "psql -U postgres -f database-schema.sql",
     "db:reset": "psql -U postgres -d philosopher_ai_db -f database-schema.sql"
   },
