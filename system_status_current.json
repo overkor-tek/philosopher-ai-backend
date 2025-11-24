@@ -1,0 +1,124 @@
+{
+  "timestamp": "2025-11-24T14:32:48.812652",
+  "system_health": {
+    "available": true,
+    "score": 90.0,
+    "rating": "EXCELLENT",
+    "checks_passed": 9,
+    "checks_total": 10
+  },
+  "voice_interface": {
+    "available": true,
+    "indexed_items": 191,
+    "version": "3.0",
+    "production_ready": true
+  },
+  "tests": {
+    "available": true,
+    "total": 0,
+    "passed": 19,
+    "failed": 0,
+    "pass_rate": 0,
+    "last_run": null
+  },
+  "performance": {
+    "available": true,
+    "rating": "UNKNOWN",
+    "avg_query_time": 0.0007579326629638672,
+    "throughput": 1319.3784208870713,
+    "last_run": "2025-11-24T07:17:46.405645"
+  },
+  "migrations": {
+    "available": true,
+    "total": 5,
+    "applied": 0,
+    "pending": 5
+  },
+  "dormant_systems": {
+    "available": true,
+    "count": 11,
+    "systems": [
+      {
+        "name": "TRINITY_AUTONOMOUS_MONITOR",
+        "type": "py",
+        "size": 8314
+      },
+      {
+        "name": "cyclotron_knowledge_search",
+        "type": "py",
+        "size": 12763
+      },
+      {
+        "name": "spreadsheet_brain_sync",
+        "type": "py",
+        "size": 7895
+      },
+      {
+        "name": "cyclotron_continuous_sync",
+        "type": "py",
+        "size": 5554
+      },
+      {
+        "name": "cyclotron_logger",
+        "type": "py",
+        "size": 8902
+      },
+      {
+        "name": "cyclotron_backend_connector",
+        "type": "py",
+        "size": 12487
+      },
+      {
+        "name": "TRINITY_INBOX_SYSTEM",
+        "type": "js",
+        "size": 9461
+      },
+      {
+        "name": "TRINITY_MONITOR",
+        "type": "js",
+        "size": 6422
+      },
+      {
+        "name": "TRINITY_TASK_COORDINATOR",
+        "type": "js",
+        "size": 10792
+      },
+      {
+        "name": "TRINITY_CONVERGENCE_HUB",
+        "type": "js",
+        "size": 13921
+      },
+      {
+        "name": "cyclotron_analytics_system",
+        "type": "js",
+        "size": 30995
+      }
+    ]
+  },
+  "git": {
+    "available": true,
+    "branch": "claude/continue-work-01LJqHKRKUfoWyqToLjyZttT",
+    "commit": "d7a639e",
+    "clean": true,
+    "uncommitted_files": 0
+  },
+  "documentation": {
+    "available": true,
+    "total_docs": 195,
+    "total_words": 0,
+    "indexed": true
+  },
+  "trinity": {
+    "available": true,
+    "c1_status": "active",
+    "c2_status": "work_order_deployed",
+    "c3_status": "work_order_deployed",
+    "work_orders": 2
+  },
+  "logs": {
+    "available": true,
+    "count": 16,
+    "total_size": 748648,
+    "latest": "health_check_20251124_143249.json"
+  }
+}
