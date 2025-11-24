@@ -1,149 +1,82 @@
-name: Notify D of Repository Activity
+name: 🟣 Operation Purple - Notify via GitHub
 
 on:
-  issues:
-    types: [opened, closed, reopened]
-  pull_request:
-    types: [opened, closed, reopened, merged]
-  release:
-    types: [published, created]
-  discussion:
-    types: [created, answered]
   push:
-    branches:
-      - main
+    branches: [main, master]
 
 jobs:
   notify:
+    name: 🟣 Post to Operation Purple Security
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+      
+      - name: 🟣 Create notification issue
+        uses: actions/github-script@v7
         with:
-          node-version: '18'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const repo = context.repo.repo;
+            const owner = context.repo.owner;
+            const eventName = context.eventName;
+            const actor = context.actor;
+            const ref = context.ref;
+            
+            let title = '';
+            let body = '';
+            const labels = ['notification', 'operation-purple'];
+            
+            if (eventName === 'push') {
+              const commitMessage = context.payload.head_commit?.message || 'Unknown commit';
+              const commitUrl = context.payload.head_commit?.url || '';
+              const commitSha = context.sha.substring(0, 7);
+              const branch = ref.replace('refs/heads/', '');
+              
+              title = `🔄 Push to ${repo}: ${commitMessage.split('\n')[0]}`;
+              body = `## 🟣 Push Notification
 
-      - name: Install dependencies
-        run: npm install nodemailer
+**Repository:** \`${owner}/${repo}\`
+**Branch:** \`${branch}\`
+**Commit:** [\`${commitSha}\`](${commitUrl})
+**Author:** @${actor}
 
-      - name: Send notification email
-        env:
-          EMAIL_HOST: ${{ secrets.EMAIL_HOST }}
-          EMAIL_PORT: ${{ secrets.EMAIL_PORT }}
-          EMAIL_USER: ${{ secrets.EMAIL_USER }}
-          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
-          RECIPIENT_EMAIL: darrick.preble@gmail.com
+### 📝 Commit Message:
+\`\`\`
+${commitMessage}
+\`\`\`
+
+### 🔗 Links:
+- [View Commit](${commitUrl})
+- [View Repository](https://github.com/${owner}/${repo})
+- [Actions](https://github.com/${owner}/${repo}/actions)
+
+---
+🟣 **Operation Purple** - Automated notification from ${repo}`;
+              
+              labels.push('push');
+            }
+            
+            try {
+              const result = await github.rest.issues.create({
+                owner: 'overkor-tek',
+                repo: 'operation-purple-security',
+                title: title,
+                body: body,
+                labels: labels
+              });
+              
+              console.log(`✅ Notification created: ${result.data.html_url}`);
+            } catch (error) {
+              console.error('❌ Failed to create notification:', error.message);
+              core.setFailed(error.message);
+            }
+      
+      - name: 🟣 Report success
+        if: success()
         run: |
-          node -e "
-          const nodemailer = require('nodemailer');
-          
-          const transporter = nodemailer.createTransport({
-            host: process.env.EMAIL_HOST,
-            port: process.env.EMAIL_PORT,
-            auth: {
-              user: process.env.EMAIL_USER,
-              pass: process.env.EMAIL_PASS
-            }
-          });
-
-          let subject = '';
-          let message = '';
-          const repo = '${{ github.repository }}';
-          const actor = '${{ github.actor }}';
-          const eventName = '${{ github.event_name }}';
-
-          if (eventName === 'issues') {
-            const action = '${{ github.event.action }}';
-            const issueTitle = '${{ github.event.issue.title }}';
-            const issueNumber = '${{ github.event.issue.number }}';
-            const issueUrl = '${{ github.event.issue.html_url }}';
-            
-            subject = \`💖 Issue \${action}: #\${issueNumber} - \${issueTitle}\`;
-            message = \`
-              <h2>Issue \${action} in \${repo}</h2>
-              <p><strong>Issue:</strong> #\${issueNumber} - \${issueTitle}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><strong>Action:</strong> \${action}</p>
-              <p><a href=\"\${issueUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Issue</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
-          } else if (eventName === 'pull_request') {
-            const action = '${{ github.event.action }}';
-            const prTitle = '${{ github.event.pull_request.title }}';
-            const prNumber = '${{ github.event.pull_request.number }}';
-            const prUrl = '${{ github.event.pull_request.html_url }}';
-            
-            subject = \`💖 Pull Request \${action}: #\${prNumber} - \${prTitle}\`;
-            message = \`
-              <h2>Pull Request \${action} in \${repo}</h2>
-              <p><strong>PR:</strong> #\${prNumber} - \${prTitle}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><strong>Action:</strong> \${action}</p>
-              <p><a href=\"\${prUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Pull Request</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
-          } else if (eventName === 'release') {
-            const releaseName = '${{ github.event.release.name }}';
-            const releaseTag = '${{ github.event.release.tag_name }}';
-            const releaseUrl = '${{ github.event.release.html_url }}';
-            
-            subject = \`🚀 New Release: \${releaseName || releaseTag}\`;
-            message = \`
-              <h2>New Release Published in \${repo}</h2>
-              <p><strong>Release:</strong> \${releaseName || releaseTag}</p>
-              <p><strong>Tag:</strong> \${releaseTag}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${releaseUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Release</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
-          } else if (eventName === 'discussion') {
-            const discussionTitle = '${{ github.event.discussion.title }}';
-            const discussionUrl = '${{ github.event.discussion.html_url }}';
-            
-            subject = \`💬 New Discussion: \${discussionTitle}\`;
-            message = \`
-              <h2>New Discussion in \${repo}</h2>
-              <p><strong>Discussion:</strong> \${discussionTitle}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${discussionUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Discussion</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
-          } else if (eventName === 'push') {
-            const commitMessage = '${{ github.event.head_commit.message }}';
-            const commitUrl = '${{ github.event.head_commit.url }}';
-            const branch = '${{ github.ref_name }}';
-            
-            subject = \`💖 New Commit to \${branch}: \${commitMessage}\`;
-            message = \`
-              <h2>New Commit to \${repo}</h2>
-              <p><strong>Branch:</strong> \${branch}</p>
-              <p><strong>Commit:</strong> \${commitMessage}</p>
-              <p><strong>By:</strong> \${actor}</p>
-              <p><a href=\"\${commitUrl}\" style=\"background:#FF69B4;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;\">View Commit</a></p>
-              <hr>
-              <p style=\"color:#666;\">Part of The Pink Revolution 💖</p>
-            \`;
-          }
-
-          const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: process.env.RECIPIENT_EMAIL,
-            subject: subject,
-            html: message
-          };
-
-          transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-              console.log('Error:', error);
-              process.exit(1);
-            } else {
-              console.log('Email sent:', info.response);
-            }
-          });
-          "
+          echo "🟣 Operation Purple notification posted successfully!"
+          echo "📊 Event: ${{ github.event_name }}"
+          echo "👤 Actor: ${{ github.actor }}"
+          echo "📦 Repository: ${{ github.repository }}"
