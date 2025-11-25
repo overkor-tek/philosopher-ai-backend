@@ -6,6 +6,8 @@
 const express = require('express');
 const router = express.Router();
 const Anthropic = require('@anthropic-ai/sdk');
+const pool = require('../database/db');
+const logger = require('../utils/logger');
 
 // Middleware to verify JWT token
 const verifyToken = require('../middleware/auth');
@@ -13,12 +15,6 @@ const verifyToken = require('../middleware/auth');
 // Claude API client
 const anthropic = new Anthropic({
     apiKey: process.env.ANTHROPIC_API_KEY
-});
-
-// Database pool (imported from parent)
-const { Pool } = require('pg');
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
 });
 
 /**
@@ -37,17 +33,18 @@ router.get('/conversations', verifyToken, async (req, res) => {
                 c.created_at,
                 c.updated_at,
                 COUNT(m.id) as message_count,
-                (
-                    SELECT content
-                    FROM messages
-                    WHERE conversation_id = c.id
-                    ORDER BY created_at DESC
-                    LIMIT 1
-                ) as last_message_preview
+                last_msg.content as last_message_preview
             FROM conversations c
             LEFT JOIN messages m ON m.conversation_id = c.id
+            LEFT JOIN LATERAL (
+                SELECT content
+                FROM messages
+                WHERE conversation_id = c.id
+                ORDER BY created_at DESC
+                LIMIT 1
+            ) last_msg ON true
             WHERE c.user_id = $1 AND c.is_deleted = FALSE
-            GROUP BY c.id
+            GROUP BY c.id, last_msg.content
             ORDER BY c.updated_at DESC
             LIMIT $2 OFFSET $3`,
             [userId, limit, offset]
@@ -58,7 +55,7 @@ router.get('/conversations', verifyToken, async (req, res) => {
             conversations: result.rows
         });
     } catch (error) {
-        console.error('Error getting conversations:', error);
+        logger.error('Error getting conversations:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to get conversations'
@@ -104,7 +101,7 @@ router.get('/conversations/:id', verifyToken, async (req, res) => {
             messages: messagesResult.rows
         });
     } catch (error) {
-        console.error('Error getting conversation:', error);
+        logger.error('Error getting conversation:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to get conversation'
@@ -133,7 +130,7 @@ router.post('/conversations', verifyToken, async (req, res) => {
             conversation: result.rows[0]
         });
     } catch (error) {
-        console.error('Error creating conversation:', error);
+        logger.error('Error creating conversation:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to create conversation'
@@ -178,7 +175,7 @@ router.patch('/conversations/:id', verifyToken, async (req, res) => {
             conversation: result.rows[0]
         });
     } catch (error) {
-        console.error('Error updating conversation:', error);
+        logger.error('Error updating conversation:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to update conversation'
@@ -215,7 +212,7 @@ router.delete('/conversations/:id', verifyToken, async (req, res) => {
             message: 'Conversation deleted'
         });
     } catch (error) {
-        console.error('Error deleting conversation:', error);
+        logger.error('Error deleting conversation:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to delete conversation'
@@ -346,7 +343,7 @@ router.post('/chat', verifyToken, async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Chat error:', error);
+        logger.error('Chat error:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to process chat message',
@@ -398,7 +395,7 @@ router.get('/search', verifyToken, async (req, res) => {
             query: query
         });
     } catch (error) {
-        console.error('Search error:', error);
+        logger.error('Search error:', error);
         res.status(500).json({
             success: false,
             error: 'Failed to search conversations'

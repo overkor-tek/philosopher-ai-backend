@@ -4,12 +4,8 @@
  */
 
 const jwt = require('jsonwebtoken');
-const { Pool } = require('pg');
-
-// Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL || `postgresql://${process.env.DB_USER}:${process.env.DB_PASSWORD}@${process.env.DB_HOST}:${process.env.DB_PORT}/${process.env.DB_NAME}`
-});
+const pool = require('../database/db');
+const logger = require('../utils/logger');
 
 const verifyToken = async (req, res, next) => {
     try {
@@ -43,7 +39,7 @@ const verifyToken = async (req, res, next) => {
         req.user = userResult.rows[0];
         next();
     } catch (error) {
-        console.error('Auth middleware error:', error);
+        logger.error('Auth middleware error:', error);
         return res.status(403).json({
             success: false,
             error: 'Invalid or expired token'

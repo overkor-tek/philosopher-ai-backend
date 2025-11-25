@@ -7,13 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-const { Pool } = require('pg');
+const pool = require('../database/db');
 const logger = require('../utils/logger');
-
-// Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
 
 // ================================================
 // TRACK EVENT

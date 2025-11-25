@@ -7,13 +7,8 @@
 
 const express = require('express');
 const router = express.Router();
-const { Pool } = require('pg');
+const pool = require('../database/db');
 const validator = require('validator');
-
-// Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
 
 // ================================================
 // GET PROFILE

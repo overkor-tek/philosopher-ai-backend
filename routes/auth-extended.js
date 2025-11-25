@@ -10,13 +10,8 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const { Pool } = require('pg');
+const pool = require('../database/db');
 const { sendPasswordResetEmail, sendEmailVerification } = require('../services/emailService');
-
-// Database connection
-const pool = new Pool({
-    connectionString: process.env.DATABASE_URL
-});
 
 // ================================================
 // PASSWORD RESET - REQUEST
