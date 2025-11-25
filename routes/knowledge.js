@@ -1,12 +1,15 @@
 /**
- * KNOWLEDGE API ROUTES
- * For Data Cyclotron integration
- * Auto-ingest knowledge from RSS feeds and other sources
+ * PHILOSOPHER KNOWLEDGE API
+ * Ancient wisdom synthesis & deep conversations
+ * Core mission: Connect dots across traditions, enable profound dialogue
+ *
+ * Replaces makeshift "questions table" approach with proper knowledge infrastructure
  */
 
 const express = require('express');
 const router = express.Router();
 const pool = require('../database/db');
+const logger = require('../utils/logger');
 
 /**
  * POST /api/v1/knowledge
