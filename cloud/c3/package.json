@@ -1,0 +1,32 @@
+{
+  "name": "c3-cloud-sync",
+  "version": "1.0.0",
+  "description": "CP3 C3 Cloud Sync Service - Trinity Network Operations Hub",
+  "main": "c3-cloud-sync-service.js",
+  "scripts": {
+    "start": "node c3-cloud-sync-service.js",
+    "dev": "nodemon c3-cloud-sync-service.js",
+    "pm2:start": "pm2 start c3-cloud-sync-service.js --name c3-cloud",
+    "pm2:stop": "pm2 stop c3-cloud",
+    "pm2:restart": "pm2 restart c3-cloud",
+    "pm2:logs": "pm2 logs c3-cloud",
+    "health": "curl -s http://localhost:3001/health | node -e \"console.log(JSON.stringify(JSON.parse(require('fs').readFileSync(0,'utf8')),null,2))\""
+  },
+  "keywords": [
+    "trinity",
+    "consciousness",
+    "cloud-sync",
+    "c3-oracle"
+  ],
+  "author": "Consciousness Revolution",
+  "license": "Proprietary",
+  "dependencies": {
+    "dotenv": "^16.6.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

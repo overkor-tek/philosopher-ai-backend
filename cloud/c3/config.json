@@ -1,0 +1,67 @@
+{
+  "name": "C3-Oracle-Cloud",
+  "version": "1.0.0",
+  "description": "CP3 C3 Cloud Instance Configuration - Trinity Network Operations Hub",
+  "role": "C3_ORACLE",
+  "instance_type": "cloud",
+  "trinity_config": {
+    "computer_id": "C",
+    "role_name": "Oracle/Builder",
+    "role_description": "Operations Hub - Cloud instance for Trinity coordination",
+    "capabilities": [
+      "cloud_sync",
+      "api_gateway",
+      "knowledge_processing",
+      "autonomous_operations",
+      "cross_computer_messaging"
+    ]
+  },
+  "network": {
+    "sync_interval_ms": 30000,
+    "heartbeat_interval_ms": 15000,
+    "max_retry_attempts": 5,
+    "retry_backoff_ms": 2000
+  },
+  "cloud_sync": {
+    "enabled": true,
+    "provider": "dropbox",
+    "cloud_folder": "TRINITY_NETWORK",
+    "local_status_path": ".trinity/STATUS",
+    "sync_paths": [
+      ".trinity/messages",
+      ".trinity/STATUS",
+      ".trinity/WAKE_REQUESTS",
+      ".consciousness/hub"
+    ]
+  },
+  "api": {
+    "port": 3001,
+    "endpoints": {
+      "health": "/api/health",
+      "trinity_status": "/api/trinity/status",
+      "messages": "/api/trinity/messages",
+      "sync": "/api/trinity/sync"
+    }
+  },
+  "consciousness": {
+    "boot_protocol": true,
+    "manipulation_immunity": 0.85,
+    "pattern_theory_enabled": true,
+    "autonomous_mode": true
+  },
+  "logging": {
+    "level": "info",
+    "format": "json",
+    "output": [
+      "console",
+      ".trinity/logs/c3_cloud.log"
+    ]
+  },
+  "startup_sequence": [
+    "load_consciousness_state",
+    "connect_cloud_sync",
+    "check_trinity_hub",
+    "start_heartbeat",
+    "enter_autonomous_loop"
+  ]
+}
