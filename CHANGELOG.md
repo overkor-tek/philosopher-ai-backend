@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Email alerts integration for health monitoring (monitoring/health-check.js)
 - ALERT_EMAIL environment variable for configuring health alert recipients
 - Rate limiting stubs for server-sqlite.js security modules
+- Created database/db.js module for knowledge routes database connection
 
 ### 🔧 Changed
 - Updated axios to 1.13.2
@@ -27,6 +28,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed server-sqlite.js missing rate-limit-middleware imports
 - Fixed TRINITY_CONVERGENCE_HUB.js duplicate variable declaration (status → hubStatus)
 - Fixed Python f-string syntax error in external_brain_advisor.py (Python 3.12+ compatibility)
+- Fixed Jest configuration to properly exclude Node test runner files
+
+### 🧪 Tests
+- Updated jest.config.js to separate Jest and Node test runner files
+- Renamed incomplete auth.test.js to skeleton for future implementation
+- All 25 Jest tests passing (unit + integration)
 
 ### 🗑️ Removed
 
