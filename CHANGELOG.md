@@ -36,6 +36,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - All 25 Jest tests passing (unit + integration)
 
 ### 🗑️ Removed
+- Removed unused uuid dependency (not imported anywhere)
+- Removed unused ws dependency (bundled with socket.io)
+- Removed tracked __pycache__ directory from git
 
 ### 🔒 Security
 - Fixed js-yaml prototype pollution vulnerability (npm audit fix)
