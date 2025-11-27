@@ -1,0 +1,63 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+
+# Git
+.git/
+.gitignore
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+error.log
+combined.log
+
+# Environment files (use docker secrets or env vars instead)
+.env
+.env.*
+!.env.example
+
+# Test files
+tests/
+*.test.js
+*.spec.js
+coverage/
+.nyc_output/
+
+# Documentation (not needed in container)
+*.md
+!README.md
+docs/
+
+# Archive and dormant systems
+ARCHIVE/
+DORMANT_SYSTEMS/
+100X_BACKUP/
+
+# Trinity communication files (not needed in container)
+.trinity/
+.consciousness/
+FOR_SYNC_FOLDER/
+
+# Development files
+Makefile
+docker-compose*.yml
+*.sql
+
+# GitHub Actions
+.github/
+
+# Misc
+*.bak
+*.tmp
+*.temp
