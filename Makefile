@@ -27,6 +27,8 @@ help:
 	@echo "  make status     - Check system status"
 	@echo "  make test-api   - Test API endpoints"
 	@echo "  make validate-env - Validate environment"
+	@echo "  make startup-check - Full system check"
+	@echo "  make preflight  - Pre-deployment checks"
 	@echo "  make db-seed    - Seed test data"
 	@echo "  make clean      - Clean temp files"
 	@echo ""
@@ -103,3 +105,10 @@ db-seed:
 # Validation
 validate-env:
 	node scripts/validate-env.js
+
+startup-check:
+	node scripts/startup-check.js
+
+# Pre-flight check before production
+preflight: validate-env startup-check
+	@echo "✅ All pre-flight checks passed"
