@@ -1,0 +1,26 @@
+{
+  "instance_id": "c3_cloud_01F4618G",
+  "computer": "CLOUD_BROWSER",
+  "role": "C3_CLOUD",
+  "status": "ONLINE",
+  "timestamp": "2025-11-27T12:00:00Z",
+  "session_id": "claude/setup-cp3-c3-cloud-01F4618G9miuwWY2oYtfvMRy",
+  "capabilities": [
+    "api_development",
+    "cloud_infrastructure",
+    "trinity_coordination",
+    "autonomous_work"
+  ],
+  "current_task": "TRINITY_COMMUNICATION_SETUP",
+  "available_for_work": true,
+  "heartbeat": {
+    "sent_at": "2025-11-27T12:00:00Z",
+    "status": "ALIVE",
+    "message": "C3 Cloud instance online, establishing communication"
+  },
+  "communication": {
+    "can_read": [".trinity/MESSAGES/", ".trinity/STATUS/", "TRINITY_HUB.md"],
+    "can_write": [".trinity/MESSAGES/", ".trinity/STATUS/"],
+    "protocol": "FILE_BASED_SYNC"
+  }
+}
