@@ -453,14 +453,15 @@ EXAMPLES:
       hub.reportComplete(memberComplete, { completed: true });
       break;
 
-    case 'status':
-      const status = hub.getStatus();
+    case 'status': {
+      const hubStatus = hub.getStatus();
       console.log('\n' + '='.repeat(60));
       console.log('TRINITY CONVERGENCE HUB STATUS');
       console.log('='.repeat(60) + '\n');
-      console.log(JSON.stringify(status, null, 2));
+      console.log(JSON.stringify(hubStatus, null, 2));
       console.log('\n');
       break;
+    }
 
     case 'reset':
       hub.reset();
