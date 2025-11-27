@@ -1,0 +1,17 @@
+# ================================================
+# RAILWAY DEPLOYMENT CONFIGURATION
+# Philosopher AI Backend - Production
+# ================================================
+
+[build]
+builder = "nixpacks"
+
+[deploy]
+startCommand = "node server-production.js"
+healthcheckPath = "/api/health"
+healthcheckTimeout = 30
+restartPolicyType = "on_failure"
+restartPolicyMaxRetries = 3
+
+[env]
+NODE_ENV = "production"
