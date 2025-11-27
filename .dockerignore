@@ -1,0 +1,64 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Environment files (use env_file in docker-compose instead)
+.env
+.env.*
+!.env.example
+!.env.production.example
+!.env.cloud.example
+
+# Git
+.git
+.gitignore
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+.trinity/logs/*
+
+# Test files
+test
+tests
+*.test.js
+*.spec.js
+coverage
+.nyc_output
+
+# Documentation (not needed in container)
+*.md
+!README.md
+docs
+
+# Archives
+ARCHIVE
+
+# Session reports (not needed in container)
+SESSION_REPORTS
+SESSION_*.md
+COMMANDER_*.md
+
+# Temporary files
+*.tmp
+*.temp
+unp*.tmp
+
+# Build artifacts
+dist
+build
+
+# Database files (use volumes instead)
+*.db
+*.sqlite
+database/*.db

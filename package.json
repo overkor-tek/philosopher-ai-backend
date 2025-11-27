@@ -13,7 +13,11 @@
     "test:sqlite": "node server-sqlite.js",
     "db:migrate": "node migrate-database-pg.js",
     "db:setup": "psql -U postgres -f database-schema.sql",
-    "db:reset": "psql -U postgres -d philosopher_ai_db -f database-schema.sql"
+    "db:reset": "psql -U postgres -d philosopher_ai_db -f database-schema.sql",
+    "cloud:c3": "node cloud/c3/c3-cloud-sync-service.js",
+    "cloud:c3:dev": "nodemon cloud/c3/c3-cloud-sync-service.js",
+    "trinity:start": "node cloud/c3/c3-cloud-sync-service.js & node server.js",
+    "trinity:status": "curl -s http://localhost:3001/api/trinity/status | node -e \"console.log(JSON.stringify(JSON.parse(require('fs').readFileSync(0,'utf8')),null,2))\""
   },
   "keywords": [
     "consciousness",
