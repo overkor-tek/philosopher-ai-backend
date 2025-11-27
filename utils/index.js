@@ -32,6 +32,27 @@ const cache = require('./cache');
 // Metrics
 const metrics = require('./metrics');
 
+// Shutdown
+const shutdown = require('./shutdown');
+
+// Health check
+const healthCheck = require('./healthCheck');
+
+// Feature flags
+const featureFlags = require('./featureFlags');
+
+// Pagination
+const pagination = require('./pagination');
+
+// Retry
+const retry = require('./retry');
+
+// Crypto
+const cryptoUtils = require('./crypto');
+
+// Webhooks
+const webhook = require('./webhook');
+
 module.exports = {
   // Database
   db,
@@ -68,5 +89,33 @@ module.exports = {
 
   // Metrics
   metrics,
-  metricsMiddleware: metrics.middleware.bind(metrics)
+  metricsMiddleware: metrics.middleware.bind(metrics),
+
+  // Shutdown
+  shutdown,
+
+  // Health check
+  healthCheck,
+
+  // Feature flags
+  featureFlags,
+
+  // Pagination
+  pagination,
+  paginate: pagination.paginate,
+  paginateQuery: pagination.paginateQuery,
+
+  // Retry
+  retry: retry.retry,
+  withRetry: retry.withRetry,
+  CircuitBreaker: retry.CircuitBreaker,
+
+  // Crypto
+  crypto: cryptoUtils,
+  encrypt: cryptoUtils.encrypt,
+  decrypt: cryptoUtils.decrypt,
+  generateToken: cryptoUtils.generateToken,
+
+  // Webhooks
+  webhook
 };

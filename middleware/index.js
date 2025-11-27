@@ -42,6 +42,9 @@ const loggingMiddleware = require('./logging');
 // Analytics
 const analyticsMiddleware = require('./analytics');
 
+// API Key authentication
+const apiKey = require('./apiKey');
+
 module.exports = {
   // Auth
   verifyToken,
@@ -72,5 +75,9 @@ module.exports = {
   logging: loggingMiddleware,
 
   // Analytics
-  analytics: analyticsMiddleware
+  analytics: analyticsMiddleware,
+
+  // API Key
+  apiKey,
+  apiKeyAuth: apiKey.apiKeyAuth
 };
