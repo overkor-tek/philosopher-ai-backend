@@ -21,6 +21,11 @@ Thumbs.db
 *.temp
 *.log
 
+# Backup files
+*.backup*
+*.bak
+*-backup-*
+
 # Large binaries (if any)
 *.exe
 *.dll
