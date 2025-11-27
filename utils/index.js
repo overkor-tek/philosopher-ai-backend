@@ -29,6 +29,9 @@ const emailNotifier = require('./email-notifier');
 // Cache
 const cache = require('./cache');
 
+// Metrics
+const metrics = require('./metrics');
+
 module.exports = {
   // Database
   db,
@@ -61,5 +64,9 @@ module.exports = {
 
   // Cache
   cache,
-  cacheMiddleware: cache.cacheMiddleware
+  cacheMiddleware: cache.cacheMiddleware,
+
+  // Metrics
+  metrics,
+  metricsMiddleware: metrics.middleware.bind(metrics)
 };
