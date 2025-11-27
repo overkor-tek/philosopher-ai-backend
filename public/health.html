@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philosopher AI - Health Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+        .container { max-width: 800px; margin: 0 auto; }
+        h1 {
+            text-align: center;
+            margin-bottom: 2rem;
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card {
+            background: rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            backdrop-filter: blur(10px);
+        }
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .status-row:last-child { border-bottom: none; }
+        .status-label { opacity: 0.8; }
+        .status-value { font-weight: bold; }
+        .status-ok { color: #4ade80; }
+        .status-warn { color: #fbbf24; }
+        .status-error { color: #f87171; }
+        .status-unknown { color: #9ca3af; }
+        .refresh-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(90deg, #ff6b9d, #c44569);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        .refresh-btn:hover { opacity: 0.9; }
+        .timestamp { text-align: center; opacity: 0.6; margin-top: 1rem; font-size: 0.9rem; }
+        #loading { text-align: center; padding: 2rem; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Philosopher AI Backend</h1>
+
+        <div id="loading">Loading health data...</div>
+
+        <div id="health-data" style="display: none;">
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">System Status</h2>
+                <div class="status-row">
+                    <span class="status-label">Status</span>
+                    <span id="status" class="status-value status-unknown">--</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Database</span>
+                    <span id="database" class="status-value status-unknown">--</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Environment</span>
+                    <span id="environment" class="status-value">--</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">Integrations</h2>
+                <div class="status-row">
+                    <span class="status-label">Stripe</span>
+                    <span id="stripe" class="status-value status-unknown">--</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Anthropic</span>
+                    <span id="anthropic" class="status-value status-unknown">--</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2 style="margin-bottom: 1rem;">Server Info</h2>
+                <div class="status-row">
+                    <span class="status-label">Uptime</span>
+                    <span id="uptime" class="status-value">--</span>
+                </div>
+                <div class="status-row">
+                    <span class="status-label">Memory</span>
+                    <span id="memory" class="status-value">--</span>
+                </div>
+            </div>
+
+            <button class="refresh-btn" onclick="fetchHealth()">Refresh</button>
+            <p class="timestamp">Last updated: <span id="last-update">--</span></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchHealth() {
+            const loading = document.getElementById('loading');
+            const data = document.getElementById('health-data');
+
+            loading.style.display = 'block';
+            data.style.display = 'none';
+
+            try {
+                const response = await fetch('/api/v1/health');
+                const health = await response.json();
+
+                // Status
+                const statusEl = document.getElementById('status');
+                statusEl.textContent = health.status || 'unknown';
+                statusEl.className = 'status-value ' + (health.status === 'healthy' ? 'status-ok' : 'status-error');
+
+                // Database
+                const dbEl = document.getElementById('database');
+                dbEl.textContent = health.database?.status || health.database || 'unknown';
+                dbEl.className = 'status-value ' + (health.database?.status === 'connected' || health.database === 'connected' ? 'status-ok' : 'status-error');
+
+                // Environment
+                document.getElementById('environment').textContent = health.server?.environment || health.environment || 'unknown';
+
+                // Integrations
+                const stripeEl = document.getElementById('stripe');
+                stripeEl.textContent = health.integrations?.stripe ? 'Enabled' : 'Disabled';
+                stripeEl.className = 'status-value ' + (health.integrations?.stripe ? 'status-ok' : 'status-warn');
+
+                const anthropicEl = document.getElementById('anthropic');
+                anthropicEl.textContent = health.integrations?.anthropic ? 'Enabled' : 'Disabled';
+                anthropicEl.className = 'status-value ' + (health.integrations?.anthropic ? 'status-ok' : 'status-warn');
+
+                // Server info
+                if (health.server?.uptime) {
+                    const mins = Math.floor(health.server.uptime / 60);
+                    document.getElementById('uptime').textContent = `${mins} minutes`;
+                }
+                if (health.server?.memory) {
+                    const mb = Math.round(health.server.memory.heapUsed / 1024 / 1024);
+                    document.getElementById('memory').textContent = `${mb} MB`;
+                }
+
+                document.getElementById('last-update').textContent = new Date().toLocaleTimeString();
+
+                loading.style.display = 'none';
+                data.style.display = 'block';
+            } catch (error) {
+                loading.innerHTML = '<p class="status-error">Failed to fetch health data</p><p style="margin-top:1rem;opacity:0.6">Is the backend running?</p>';
+            }
+        }
+
+        fetchHealth();
+        setInterval(fetchHealth, 30000); // Auto-refresh every 30s
+    </script>
+</body>
+</html>
