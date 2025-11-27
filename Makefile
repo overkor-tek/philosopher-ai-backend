@@ -109,6 +109,9 @@ validate-env:
 startup-check:
 	node scripts/startup-check.js
 
+validate-system:
+	node scripts/validate-system.js
+
 # Pre-flight check before production
-preflight: validate-env startup-check
+preflight: validate-env startup-check validate-system
 	@echo "✅ All pre-flight checks passed"
