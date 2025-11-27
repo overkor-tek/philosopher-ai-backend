@@ -9,14 +9,23 @@ const axios = require('axios');
 const fs = require('fs').promises;
 const path = require('path');
 
+// Optional: Email alerts via SendGrid
+let emailService = null;
+try {
+  emailService = require('../services/emailService');
+} catch (e) {
+  // Email service not available - alerts will be console only
+}
+
 class HealthMonitor {
   constructor(config = {}) {
     this.apiUrl = config.apiUrl || 'http://localhost:3001';
     this.checkInterval = config.checkInterval || 60000; // 1 minute
     this.logFile = config.logFile || path.join(__dirname, 'health-logs.txt');
+    this.alertEmail = config.alertEmail || process.env.ALERT_EMAIL || null;
     this.isRunning = false;
     this.consecutiveFailures = 0;
-    this.maxConsecutiveFailures = 3;
+    this.maxConsecutiveFailures = config.maxConsecutiveFailures || 3;
   }
 
   /**
@@ -135,7 +144,7 @@ class HealthMonitor {
    * Send alert (email, Slack, etc.)
    */
   async sendAlert(error) {
-    console.error(`
+    const alertMessage = `
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🚨 CRITICAL ALERT: API HEALTH FAILURE
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -147,11 +156,34 @@ Time: ${new Date().toISOString()}
 
 ACTION REQUIRED: Check backend server immediately!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-    `);
+    `;
 
-    // TODO: Integrate with email/Slack/PagerDuty
-    // Example: await sendSlackNotification(error);
-    // Example: await sendEmailAlert(error);
+    console.error(alertMessage);
+
+    // Send email alert if configured
+    if (emailService && this.alertEmail) {
+      try {
+        await emailService.sendEmail({
+          to: this.alertEmail,
+          subject: `🚨 CRITICAL: API Health Failure - ${this.consecutiveFailures} consecutive failures`,
+          html: `
+            <div style="font-family: monospace; background: #1a1a1a; color: #ff4444; padding: 20px; border-radius: 8px;">
+              <h2 style="color: #ff4444;">🚨 API Health Check Failed</h2>
+              <p><strong>Consecutive failures:</strong> ${this.consecutiveFailures}</p>
+              <p><strong>API URL:</strong> ${this.apiUrl}</p>
+              <p><strong>Error:</strong> ${error.message}</p>
+              <p><strong>Time:</strong> ${new Date().toISOString()}</p>
+              <hr style="border-color: #333;">
+              <p style="color: #ff6666;"><strong>ACTION REQUIRED:</strong> Check backend server immediately!</p>
+            </div>
+          `,
+          text: alertMessage
+        });
+        console.log('📧 Alert email sent');
+      } catch (emailError) {
+        console.error('Failed to send alert email:', emailError.message);
+      }
+    }
   }
 
   /**
