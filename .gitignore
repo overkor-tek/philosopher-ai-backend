@@ -41,3 +41,7 @@ api_keys.json
 .trinity/C3_API_KEY.txt
 .trinity/messages/c2_to_c1_api_key_update.json
 logs/
+
+# Backups (keep directory, ignore backup files)
+backups/*.sql
+backups/*.sql.gz
