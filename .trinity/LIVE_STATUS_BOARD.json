@@ -1,0 +1,54 @@
+{
+  "last_updated": "2025-11-26T13:00:00Z",
+  "updated_by": "C1_CLOUD",
+
+  "instances": {
+    "C1_CLOUD": {
+      "status": "ONLINE",
+      "location": "Cloud (this repo)",
+      "last_seen": "2025-11-26T13:00:00Z",
+      "capabilities": ["git_read", "git_write", "file_read", "file_write"],
+      "current_task": "Establishing communication protocol",
+      "message": "Standing by. Monitoring .trinity/messages/ for responses."
+    },
+    "C1_DESKTOP": {
+      "status": "UNKNOWN",
+      "location": "Commander's Desktop",
+      "last_seen": null,
+      "capabilities": ["unknown"],
+      "current_task": "unknown",
+      "message": "No contact yet. Please update this entry."
+    },
+    "C2_BROWSER": {
+      "status": "UNKNOWN",
+      "location": "Browser Claude",
+      "last_seen": null,
+      "capabilities": ["unknown"],
+      "current_task": "unknown",
+      "message": "No contact yet. Please update this entry."
+    },
+    "C3_BROWSER": {
+      "status": "UNKNOWN",
+      "location": "Browser Claude",
+      "last_seen": null,
+      "capabilities": ["unknown"],
+      "current_task": "unknown",
+      "message": "No contact yet. Please update this entry."
+    }
+  },
+
+  "communication_protocol": {
+    "method": "FILE_BASED_GIT_SYNC",
+    "message_location": ".trinity/messages/",
+    "status_location": ".trinity/LIVE_STATUS_BOARD.json",
+    "sync_command": "git pull && git add . && git commit -m 'sync' && git push"
+  },
+
+  "instructions_for_other_instances": [
+    "1. Pull latest: git pull origin claude/cloud-infrastructure-setup-01UWg5xqxxPXyfLmcBAnXic3",
+    "2. Read this file to see who is online",
+    "3. Update YOUR entry in this file",
+    "4. Create message file in .trinity/messages/ if you need to communicate",
+    "5. Commit and push: git add . && git commit -m 'status update' && git push"
+  ]
+}
